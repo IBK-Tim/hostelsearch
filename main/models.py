@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 
 class Student(models.Model):
@@ -15,7 +16,7 @@ class Student(models.Model):
 class Agent(models.Model):
     user        = models.OneToOneField(User, on_delete=models.CASCADE)
     phone       = models.CharField(max_length=20)
-    id_document = models.FileField(upload_to='agent_ids/', blank=True, null=True)
+    id_document = CloudinaryField('id_document', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     created_at  = models.DateTimeField(auto_now_add=True)
 
@@ -53,8 +54,8 @@ class Hostel(models.Model):
         return self.hostel_name
     
 class HostelImage(models.Model):
-    hostel     = models.ForeignKey(Hostel, on_delete=models.CASCADE, related_name='images')
-    image      = models.ImageField(upload_to='hostel_images/')
+    hostel      = models.ForeignKey(Hostel, on_delete=models.CASCADE, related_name='images')
+    image       = CloudinaryField('image')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
