@@ -87,10 +87,16 @@ DATABASES = {
 }
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY'   : os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'tqgxqrlh'),
+    'API_KEY'   : os.environ.get('CLOUDINARY_API_KEY', '822939181846781'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'xNLNe59bTxe7L2sBl99Cs9QN6Ow'),
 }
+
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tqgxqrlh'),
+    api_key    = os.environ.get('CLOUDINARY_API_KEY', '822939181846781'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'xNLNe59bTxe7L2sBl99Cs9QN6Ow'),
+)
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Password validation
