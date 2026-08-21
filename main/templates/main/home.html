@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Find Verified Hostels Near UNIOSUN</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       HOMEPAGE — HostelSearch
+       Stack: Bootstrap 5 + Custom CSS
+       Sections:
+         1. Navbar
+         2. Hero — headline + search bar + stats
+         3. How It Works — 3 steps
+         4. Featured Hostels — 3 static cards (no login needed)
+         5. Why HostelSearch — 4 trust points
+         6. CTA — agent registration prompt
+         7. Footer
+       ============================================================ */
+
+    :root {
+      --f:  #0a3d1f;
+      --a:  #2d9e58;
+      --p:  #c8f0d6;
+      --bg: #edfaf2;
+      --s:  #ffffff;
+      --ink:#1a2e22;
+      --mu: #5a7060;
+      --li: #ddeee4;
+    }
+
+    /* ── BASE ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.65;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAVBAR ────────────────────────────────────────────── */
+    .hs-nav {
+      background: var(--f);
+      height: 60px;
+      padding: 0 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo .dot {
+      width: 28px; height: 28px;
+      background: var(--a);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
+      font-size: 13px; font-weight: 500;
+      padding: 7px 14px; border-radius: 7px;
+      transition: all 0.18s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .nav-end { display: flex; gap: 8px; align-items: center; }
+
+    /* ── BUTTONS ───────────────────────────────────────────── */
+    .btn-hs {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600; cursor: pointer;
+      border: none; transition: all 0.2s;
+      white-space: nowrap; text-decoration: none;
+    }
+    .btn-green        { background: var(--a); color: #fff; }
+    .btn-green:hover  { background: #1e7a42; color: #fff; transform: translateY(-1px); }
+    .btn-ghost        { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: #fff; }
+    .btn-ghost:hover  { background: rgba(255,255,255,0.1); color: #fff; }
+    .btn-outline      { background: transparent; border: 1.5px solid var(--li); color: var(--mu); }
+    .btn-outline:hover{ border-color: var(--a); color: var(--a); }
+    .btn-lg  { padding: 13px 32px; font-size: 15px; }
+    .btn-md  { padding: 11px 24px; font-size: 14px; }
+    .btn-sm  { padding: 8px 18px; font-size: 13px; }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      background: var(--f);
+      padding: 88px 60px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* decorative blobs */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,158,88,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(76,195,117,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 620px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* eyebrow accent — thin left-border label */
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: #4cc375;
+      padding-left: 12px;
+      border-left: 3px solid var(--a);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      color: #fff;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.07;
+      margin-bottom: 18px;
+    }
+    .hero h1 em { color: #4cc375; font-style: normal; }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.65);
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    /* hero CTA buttons */
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 52px; }
+
+    /* hero stats row */
+    .hero-stats { display: flex; gap: 44px; flex-wrap: wrap; }
+    .hstat-n {
+      font-family: 'DM Serif Display', serif;
+      font-size: 30px; color: #fff; line-height: 1;
+    }
+    .hstat-l {
+      font-size: 12px;
+      color: rgba(255,255,255,0.44);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* ── SEARCH BAR (below hero) ───────────────────────────── */
+    .search-bar-wrap {
+      padding: 0 60px;
+      background: var(--bg);
+    }
+    .search-bar {
+      background: var(--s);
+      border: 1.5px solid var(--li);
+      border-radius: 12px;
+      padding: 8px 8px 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 820px;
+      margin: -28px auto 0;
+      box-shadow: 0 8px 32px rgba(10,61,31,0.12);
+      position: relative;
+      z-index: 10;
+      transition: border-color 0.18s;
+    }
+    .search-bar:focus-within { border-color: var(--a); }
+    .search-bar input {
+      flex: 1; border: none; outline: none;
+      font-size: 15px; font-family: 'DM Sans', sans-serif;
+      color: var(--ink); background: transparent;
+    }
+    .search-bar input::placeholder { color: #a0b8a8; }
+    .sb-sep {
+      width: 1.5px; height: 26px;
+      background: var(--li); flex-shrink: 0;
+    }
+    .sb-select {
+      border: none; outline: none;
+      font-size: 13px; color: var(--mu);
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer; padding: 0 8px;
+    }
+
+    /* ── HOW IT WORKS ──────────────────────────────────────── */
+    .how-section {
+      background: var(--s);
+      padding: 88px 60px;
+    }
+    .sec-eyebrow { /* reuse eyebrow for section labels */
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: #1e7a42;
+      padding-left: 12px;
+      border-left: 3px solid var(--a);
+      margin-bottom: 12px;
+    }
+    .sec-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 30px; color: var(--f);
+      margin-bottom: 6px;
+    }
+    .sec-sub { font-size: 15px; color: var(--mu); }
+
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-top: 48px; }
+    .step { padding: 32px 28px; border-left: 1.5px solid var(--li); }
+    .step:first-child { border-left: none; padding-left: 0; }
+    .step-n {
+      font-family: 'DM Serif Display', serif;
+      font-size: 52px; color: var(--p);
+      line-height: 1; margin-bottom: 16px;
+    }
+    .step h3 { font-size: 16px; font-weight: 600; color: var(--f); margin-bottom: 8px; }
+    .step p  { font-size: 14px; color: var(--mu); line-height: 1.75; }
+
+    /* ── FEATURED HOSTELS ──────────────────────────────────── */
+    .listings-section {
+      background: var(--bg);
+      padding: 88px 60px;
+    }
+    .sec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 36px;
+    }
+
+    /* hostel cards */
+    .cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .hcard {
+      background: var(--s);
+      border: 1.5px solid var(--li);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.22s;
+      display: flex; flex-direction: column;
+    }
+    .hcard:hover {
+      border-color: var(--a);
+      box-shadow: 0 6px 24px rgba(10,61,31,0.09);
+      transform: translateY(-3px);
+    }
+    .hcard-img {
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* gradient placeholders — swap with real <img> tags later */
+    .gi1 { background: linear-gradient(145deg, #145c30, #2d9e58); }
+    .gi2 { background: linear-gradient(145deg, #0a3d1f, #1e7a42); }
+    .gi3 { background: linear-gradient(145deg, #1e7a42, #4cc375); }
+
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      background: var(--p); color: var(--f);
+      border: 1px solid var(--a);
+    }
+    .hcard-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+    .hcard-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .hcard-loc  { font-size: 12px; color: var(--mu); margin-bottom: 12px; }
+    .tags       { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tag {
+      background: var(--bg); color: #1e7a42;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+      border: 1px solid var(--p);
+    }
+    .hcard-ft {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px; margin-top: auto;
+    }
+    .price {
+      font-family: 'DM Serif Display', serif;
+      font-size: 17px; color: var(--f);
+    }
+    .price small {
+      font-size: 12px; color: var(--mu);
+      font-family: 'DM Sans', sans-serif; font-weight: 400;
+    }
+    .stars {
+      color: #f59e0b; font-size: 13px;
+      display: flex; align-items: center; gap: 2px;
+    }
+    .stars span { color: var(--mu); font-size: 11px; margin-left: 2px; }
+
+    /* card CTA — prompts login */
+    .card-cta {
+      display: block; width: 100%; padding: 10px;
+      text-align: center; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+    }
+    .card-cta-primary {
+      background: var(--a); color: #fff; border: none;
+    }
+    .card-cta-primary:hover { background: #1e7a42; color: #fff; }
+
+    /* blurred contact teaser on card */
+    .contact-teaser {
+      background: var(--bg);
+      border: 1.5px solid var(--li);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ct-label { font-size: 11px; color: var(--mu); }
+    .ct-val {
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px; color: var(--a);
+      filter: blur(4px);
+      user-select: none;
+    }
+    .ct-hint { font-size: 11px; color: var(--a); font-weight: 600; }
+
+    /* ── WHY HOSTELSEARCH ──────────────────────────────────── */
+    .trust-section {
+      background: var(--s);
+      padding: 88px 60px;
+    }
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 2px;
+      margin-top: 44px;
+      border: 1.5px solid var(--li);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .trust-item {
+      padding: 36px 32px;
+      background: var(--s);
+      border-right: 1.5px solid var(--li);
+      border-bottom: 1.5px solid var(--li);
+      transition: background 0.18s;
+    }
+    .trust-item:hover { background: var(--bg); }
+    .trust-item:nth-child(2) { border-right: none; }
+    .trust-item:nth-child(3) { border-bottom: none; }
+    .trust-item:nth-child(4) { border-right: none; border-bottom: none; }
+    .ti-ey {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      color: var(--mu);
+      padding-left: 10px;
+      border-left: 3px solid var(--a);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .trust-item h3 { font-size: 16px; font-weight: 600; color: var(--f); margin-bottom: 8px; }
+    .trust-item p  { font-size: 14px; color: var(--mu); line-height: 1.75; }
+
+    /* ── AGENT CTA SECTION ─────────────────────────────────── */
+    .agent-cta {
+      background: var(--f);
+      padding: 80px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .agent-cta h2 {
+      font-family: 'DM Serif Display', serif;
+      color: #fff; font-size: 30px; margin-bottom: 10px;
+    }
+    .agent-cta p {
+      color: rgba(255,255,255,0.6);
+      font-size: 15px; line-height: 1.75;
+      max-width: 480px;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    .hs-footer {
+      background: var(--f);
+      color: rgba(255,255,255,0.55);
+      padding: 52px 60px 28px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 32px;
+    }
+    .foot-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px; color: #fff; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .foot-logo .dot {
+      width: 26px; height: 26px;
+      background: var(--a); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    .foot-brand p { font-size: 13px; line-height: 1.8; }
+    .foot-col h4 {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #fff; margin-bottom: 14px;
+    }
+    .foot-col a {
+      display: block; color: rgba(255,255,255,0.55);
+      font-size: 13px; margin-bottom: 8px;
+      transition: color 0.18s;
+    }
+    .foot-col a:hover { color: #4cc375; }
+    .foot-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      display: flex; justify-content: space-between;
+      font-size: 12px;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 991px) {
+      .hs-nav        { padding: 0 24px; }
+      .nav-links     { display: none; }
+      .hero          { padding: 60px 24px 52px; }
+      .search-bar-wrap { padding: 0 24px; }
+      .how-section, .listings-section,
+      .trust-section, .agent-cta { padding: 60px 24px; }
+      .hs-footer     { padding: 40px 24px 24px; }
+      .steps         { grid-template-columns: 1fr; }
+      .step          { border-left: none; border-top: 1.5px solid var(--li); padding: 24px 0; }
+      .step:first-child { border-top: none; padding-top: 0; }
+      .cards-grid    { grid-template-columns: 1fr; }
+      .trust-grid    { grid-template-columns: 1fr; }
+      .trust-item    { border-right: none !important; }
+      .trust-item:last-child { border-bottom: none; }
+      .sec-header    { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .foot-grid     { grid-template-columns: 1fr 1fr; }
+      .agent-cta     { flex-direction: column; }
+    }
+    @media (max-width: 576px) {
+      .hero h1       { font-size: 32px; }
+      .hero-stats    { gap: 24px; }
+      .search-bar    { flex-wrap: wrap; padding: 12px; }
+      .sb-sep        { display: none; }
+      .sb-select     { width: 100%; padding: 8px 0; }
+      .foot-grid     { grid-template-columns: 1fr; }
+      .cards-grid    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+     Sticky, forest green.
+     Logged-out visitors see: Login + Sign Up
+     ============================================================ -->
+<nav class="hs-nav">
+  <a href="{% url 'home' %}" class="logo">
+    <div class="dot">🏠</div>
+    HostelSearch
+  </a>
+
+  <div class="nav-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'Search' %}">Browse Hostels</a>
+    <a href="#how">How It Works</a>
+  </div>
+
+  <div class="nav-end">
+    <a href="{% url 'login' %}" class="btn-hs btn-green btn-sm">Login</a>
+    <a href="{% url 'register' %}" class="btn-hs btn-green btn-sm">Sign Up</a>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">UNIOSUN Off-Campus Accommodation</div>
+
+    <h1>Find your <em>verified</em><br>hostel. No stress.</h1>
+
+    <p class="hero-desc">
+      Browse real off-campus hostels near Osun State University.
+      Every listing is admin-verified — no fake agents, no surprises,
+      no wasted trips.
+    </p>
+
+    <div class="hero-btns">
+      <a href="{% url 'Search' %}" class="btn-hs btn-green btn-lg">Browse Hostels</a>
+      <a href="{% url 'register' %}" class="btn-hs btn-ghost btn-lg">Create Free Account</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SEARCH BAR — floats below hero
+     ============================================================ -->
+<div class="search-bar-wrap" style="padding-bottom: 56px;">
+  <form class="search-bar" action="{% url 'Search' %}" method="get">
+    <span style="font-size:18px; flex-shrink:0;">🔍</span>
+    <input
+      type="text"
+      name="q"
+      placeholder="Search by hostel name, street or area near UNIOSUN…"
+    >
+    <div class="sb-sep"></div>
+    <select name="type" class="sb-select">
+      <option value="">Any type</option>
+      <option value="sc">Self-Contained</option>
+      <option value="rp">Room &amp; Parlour</option>
+      <option value="sr">Single Room</option>
+    </select>
+    <div class="sb-sep"></div>
+    <select name="price" class="sb-select">
+      <option value="">Any price</option>
+      <option value="80000">Under ₦80,000</option>
+      <option value="150000">₦80k – ₦150k</option>
+      <option value="999999">Above ₦150k</option>
+    </select>
+    <button type="submit" class="btn-hs btn-green btn-md">Search</button>
+  </form>
+</div>
+
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section class="how-section" id="how">
+  <div class="sec-eyebrow">How It Works</div>
+  <div class="sec-title">Three steps to your next hostel</div>
+  <div class="sec-sub">No stress. No wasted trips. No fraud.</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <h3>Search</h3>
+      <p>
+        Browse verified hostels near UNIOSUN. Filter by price,
+        hostel type, and facilities until you find what fits your budget.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <h3>View Details</h3>
+      <p>
+        See real photos, full facility lists, honest pricing, and
+        reviews from students who have already lived there.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <h3>Sign Up & Contact</h3>
+      <p>
+        Create a free account to unlock agent contact details.
+        See the hostel in person. Pay only after you inspect it yourself.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FEATURED HOSTELS — static, visible to everyone
+     Visitors can see cards but must login to contact agent
+     ============================================================ -->
+<section class="listings-section" id="listings">
+  <div class="sec-header">
+    <div>
+      <div class="sec-eyebrow">Featured Hostels</div>
+      <div class="sec-title">Verified listings near UNIOSUN</div>
+      <p style="font-size:14px; color:var(--mu); margin-top:4px;">
+        Every hostel below has been reviewed and approved by our admin team.
+      </p>
+    </div>
+    <a href="{% url 'Search' %}" class="btn-hs btn-green btn-sm">See all hostels →</a>
+  </div>
+
+  {% for hostel in featured %}
+  <div class="hcard">
+    <div class="hcard-img" style="position:relative;overflow:hidden;">
+      {% if hostel.images.all %}
+        <img src="{{ hostel.images.first.image.url }}"
+            style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+            alt="{{ hostel.hostel_name }}">
+      {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);"></div>
+      {% endif %}
+      <span class="chip">✓ Verified</span>
+    </div>
+    <div class="hcard-body">
+      <div class="hcard-name">{{ hostel.hostel_name }}</div>
+      <div class="hcard-loc">📍 {{ hostel.location }}</div>
+      <div class="hcard-ft">
+        <div class="price">₦{{ hostel.price_session }} <small>/session</small></div>
+      </div>
+    </div>
+    </div>
+  {% endfor %}<!-- /cards-grid -->
+
+  <!-- Browse more prompt -->
+  <div style="text-align:center; margin-top:40px;">
+    <p style="font-size:14px; color:var(--mu); margin-bottom:16px;">
+      Showing 3 of 240+ verified hostels near UNIOSUN
+    </p>
+    <a href="{% url 'Search' %}" class="btn-hs btn-green btn-md">Browse All Hostels</a>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     WHY HOSTELSEARCH
+     ============================================================ -->
+<section class="trust-section">
+  <div class="sec-eyebrow">Why HostelSearch</div>
+  <div class="sec-title">We fix the real problem.</div>
+  <p style="font-size:15px; color:var(--mu);">
+    Students lose money to unverified agents every semester. Here is how we stop that.
+  </p>
+
+  <div class="trust-grid">
+    <div class="trust-item">
+      <span class="ti-ey">Admin Verification</span>
+      <h3>No listing goes live unreviewed</h3>
+      <p>
+        Every hostel is checked by our admin before any student can see it.
+        Fake or misrepresented listings do not make it through.
+      </p>
+    </div>
+    <div class="trust-item">
+      <span class="ti-ey">Agent Identity Check</span>
+      <h3>Agents submit ID before listing</h3>
+      <p>
+        Every agent provides government-issued identity documents
+        and is approved by admin before listing any property. No anonymous actors.
+      </p>
+    </div>
+    <div class="trust-item">
+      <span class="ti-ey">Real Photos Required</span>
+      <h3>See it before you visit</h3>
+      <p>
+        Agents upload actual photos of rooms, bathrooms, and the
+        environment. No more arriving to find the hostel looks nothing
+        like the description.
+      </p>
+    </div>
+    <div class="trust-item">
+      <span class="ti-ey">Student Reviews</span>
+      <h3>Read what past tenants say</h3>
+      <p>
+        Reviews are written by students who have actually lived in
+        the hostel. Real experiences, honest star ratings — no fake testimonials.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     AGENT CTA
+     ============================================================ -->
+<section class="agent-cta">
+  <div>
+    <h2>Own or manage a hostel?</h2>
+    <p>
+      Register as a verified agent and list your property on HostelSearch.
+      Reach hundreds of UNIOSUN students searching for accommodation every
+      semester — for free.
+    </p>
+  </div>
+  <a href="{% url 'register' %}" class="btn-hs btn-green btn-lg">
+    Register as Agent
+  </a>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="hs-footer">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="foot-logo">
+        <div class="dot">🏠</div>
+        HostelSearch
+      </div>
+      <p>
+        Verified off-campus student accommodation near Osun State University,
+        Osogbo. Browse real hostels, contact real agents.
+      </p>
+    </div>
+    <div class="foot-col">
+      <h4>Students</h4>
+      <a href="{% url 'Search' %}">Browse Hostels</a>
+      <a href="{% url 'register' %}">Create Account</a>
+      <a href="{% url 'login' %}">Login</a>
+    </div>
+    <div class="foot-col">
+      <h4>Agents</h4>
+      <a href="{% url 'register' %}">Register as Agent</a>
+      <a href="{% url 'submit_listing' %}">Submit a Listing</a>
+    </div>
+    <div class="foot-col">
+      <h4>Platform</h4>
+      <a href="#how">How It Works</a>
+      <a href="#">About</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 HostelSearch · UNIOSUN · Osun State</span>
+    <span>Computer Science Final Year Project</span>
+  </div>
+</footer>
+
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ============================================================
+     JAVASCRIPT
+     Simple scroll animation — fades in cards and steps
+     as the user scrolls down the page.
+     No heavy libraries needed.
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  // elements to animate on scroll
+  var targets = document.querySelectorAll('.hcard, .trust-item, .step');
+
+  targets.forEach(function (el) {
+    el.style.opacity   = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  });
+
+  function reveal() {
+    targets.forEach(function (el) {
+      var top = el.getBoundingClientRect().top;
+      if (top < window.innerHeight - 60) {
+        el.style.opacity   = '1';
+        el.style.transform = 'none';
+      }
+    });
+  }
+
+  window.addEventListener('scroll', reveal, { passive: true });
+  reveal(); // run once on load for elements already in view
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Browse Hostels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *,*::before,*::after{box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .hs-nav{background:var(--f);height:60px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .nav-links{display:flex;gap:2px;}
+    .nav-links a{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;padding:7px 12px;border-radius:7px;transition:all 0.18s;}
+    .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,0.1);color:#fff;}
+    .nav-end{display:flex;gap:8px;}
+    .btn-hs{display:inline-flex;align-items:center;justify-content:center;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;text-decoration:none;}
+    .btn-green{background:var(--a);color:#fff;}
+    .btn-green:hover{background:#1e7a42;color:#fff;transform:translateY(-1px);}
+    .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:#fff;}
+    .btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff;}
+    .btn-outline{background:transparent;border:1.5px solid var(--li);color:var(--mu);}
+    .btn-outline:hover{border-color:var(--a);color:var(--a);}
+    .page-hero{background:var(--f);padding:28px 44px 36px;}
+    .page-hero h1{font-family:'DM Serif Display',serif;color:#fff;font-size:26px;margin-bottom:4px;}
+    .page-hero p{color:rgba(255,255,255,0.58);font-size:14px;margin-bottom:18px;}
+    .hero-search{display:flex;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);border-radius:8px;overflow:hidden;max-width:460px;transition:border-color 0.18s;}
+    .hero-search:focus-within{border-color:var(--a);}
+    .hero-search input{flex:1;border:none;outline:none;background:transparent;color:#fff;font-size:14px;padding:11px 16px;font-family:'DM Sans',sans-serif;}
+    .hero-search input::placeholder{color:rgba(255,255,255,0.45);}
+    .hero-search button{background:var(--a);border:none;color:#fff;padding:0 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;}
+    .hero-search button:hover{background:#1e7a42;}
+    .browse-wrap{display:grid;grid-template-columns:248px 1fr;gap:28px;padding:28px 44px;max-width:1280px;margin:0 auto;}
+    .filter-panel{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:20px;margin-bottom:14px;}
+    .fp-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--f);margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid var(--li);}
+    .range-sl{width:100%;accent-color:var(--a);cursor:pointer;margin:8px 0;}
+    .range-row{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);}
+    .range-val{text-align:center;font-size:13px;font-weight:600;color:var(--a);margin-top:4px;}
+    .fck{display:flex;align-items:center;gap:9px;margin-bottom:9px;cursor:pointer;}
+    .fck input[type="checkbox"]{accent-color:var(--a);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+    .fck span.fck-label{font-size:13px;color:var(--ink);flex:1;cursor:pointer;}
+    .mob-filter-btn{display:none;width:100%;margin-bottom:14px;}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+    .toolbar-lbl{font-size:14px;color:var(--mu);}
+    .toolbar-lbl strong{color:var(--ink);}
+    .sort-sel{border:1.5px solid var(--li);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--ink);outline:none;font-family:'DM Sans',sans-serif;background:var(--s);cursor:pointer;}
+    .sort-sel:focus{border-color:var(--a);}
+    .results-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+    .hcard{background:var(--s);border:1.5px solid var(--li);border-radius:12px;overflow:hidden;transition:all 0.2s;display:flex;flex-direction:column;}
+    .hcard:hover{border-color:var(--a);box-shadow:0 4px 20px rgba(10,61,31,0.08);transform:translateY(-2px);}
+   .hcard-img {
+      height: 152px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hcard-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .hcard-img-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 12px;
+      z-index: 2;
+    }
+    .hcard-img-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(150deg, #145c30, #2d9e58);
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--p);color:var(--f);border:1px solid var(--a);}
+    .save-btn{background:rgba(255,255,255,0.9);border:1.5px solid transparent;border-radius:7px;padding:4px 8px;font-size:15px;cursor:pointer;line-height:1;transition:all 0.18s;}
+    .save-btn:hover,.save-btn.saved{background:#fff;border-color:var(--a);}
+    .hcard-body{padding:16px;flex:1;display:flex;flex-direction:column;}
+    .hcard-name{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+    .hcard-loc{font-size:12px;color:var(--mu);margin-bottom:10px;}
+    .tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+    .tag{background:var(--bg);color:#1e7a42;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--p);display:inline-block;}
+    .hcard-ft{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:auto;}
+    .price{font-family:'DM Serif Display',serif;font-size:16px;color:var(--f);}
+    .price small{font-size:12px;color:var(--mu);font-family:'DM Sans',sans-serif;font-weight:400;}
+    .stars{color:#f59e0b;font-size:13px;display:flex;align-items:center;gap:2px;}
+    .stars span{color:var(--mu);font-size:11px;margin-left:2px;}
+    .view-btn{display:block;width:100%;padding:10px;text-align:center;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;text-decoration:none;}
+    .view-btn:hover{background:#1e7a42;color:#fff;}
+    .mob-filter-canvas{width:280px !important;}
+    .mob-filter-canvas .offcanvas-header{background:var(--f);color:#fff;}
+    .mob-filter-canvas .offcanvas-title{font-weight:600;font-size:15px;}
+    .mob-filter-canvas .btn-close{filter:invert(1);}
+    .mob-filter-canvas .offcanvas-body{padding:20px;background:var(--bg);}
+    .hs-footer{background:var(--f);color:rgba(255,255,255,0.55);padding:40px 44px 24px;border-top:1px solid rgba(255,255,255,0.1);margin-top:48px;}
+    .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;margin-bottom:28px;}
+    .foot-logo{font-family:'DM Serif Display',serif;font-size:19px;color:#fff;margin-bottom:10px;}
+    .foot-brand p{font-size:13px;line-height:1.7;}
+    .foot-col h4{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:12px;}
+    .foot-col a{display:block;color:rgba(255,255,255,0.55);font-size:13px;margin-bottom:7px;transition:color 0.18s;}
+    .foot-col a:hover{color:#4cc375;}
+    .foot-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;display:flex;justify-content:space-between;font-size:12px;}
+    @media(max-width:991px){.browse-wrap{grid-template-columns:1fr;padding:16px 20px;}.desktop-filters{display:none;}.mob-filter-btn{display:block;}.results-grid{grid-template-columns:1fr;}.page-hero{padding:24px 20px 28px;}.hs-nav{padding:0 20px;}.nav-links{display:none;}.hs-footer{padding:28px 20px 20px;}.foot-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:576px){.foot-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="hs-nav">
+  <a href="{% url 'home' %}" class="logo">
+    <div class="dot">🏠</div>
+    HostelSearch
+  </a>
+  <div class="nav-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'Search' %}" class="active">Browse</a>
+  </div>
+  <div class="nav-end">
+    {% if user.is_authenticated %}
+      {% if user.student %}
+        <a href="{% url 'student_dashboard' %}" class="btn-hs btn-ghost">Dashboard</a>
+      {% else %}
+        <a href="{% url 'agent_dashboard' %}" class="btn-hs btn-ghost">Dashboard</a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="btn-hs btn-green">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-hs btn-ghost">Login</a>
+      <a href="{% url 'register' %}" class="btn-hs btn-green">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- MOBILE FILTER -->
+<div class="offcanvas offcanvas-start mob-filter-canvas" tabindex="-1" id="mobFilters">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Filter Hostels</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="filter-panel">
+      <div class="fp-title">Price Range</div>
+      <input type="range" class="range-sl" id="pr-mob" min="0" max="300000" step="5000" value="300000" oninput="syncPrice(this,'pv-mob')">
+      <div class="range-row"><span>₦0</span><span>₦300k</span></div>
+      <div class="range-val" id="pv-mob">Up to ₦300,000</div>
+    </div>
+    <div class="filter-panel">
+      <div class="fp-title">Hostel Type</div>
+      <label class="fck"><input type="checkbox" id="mt-sc"> <span class="fck-label">Self-Contained</span></label>
+      <label class="fck"><input type="checkbox" id="mt-rp"> <span class="fck-label">Room &amp; Parlour</span></label>
+      <label class="fck"><input type="checkbox" id="mt-sr"> <span class="fck-label">Single Room</span></label>
+    </div>
+    <div class="d-flex flex-column gap-2 mt-3">
+      <a href="{% url 'Search' %}" class="btn-hs btn-green">Clear Filters</a>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Browse Hostels</h1>
+  <p>{{ hostels|length }} verified hostel{{ hostels|length|pluralize }} near UNIOSUN</p>
+  <form class="hero-search" method="GET" action="{% url 'Search' %}">
+    <input type="text" name="q" placeholder="Search by hostel name, street or area…" value="{{ request.GET.q }}" autocomplete="off">
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<!-- MAIN BROWSE LAYOUT -->
+<div class="browse-wrap">
+
+  <!-- Mobile filter button -->
+  <div class="mob-filter-btn">
+    <button class="btn-hs btn-outline w-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobFilters">
+      ⚙ Filter Hostels
+    </button>
+  </div>
+
+  <!-- Desktop filter sidebar -->
+  <aside class="desktop-filters">
+    <form method="GET" action="{% url 'Search' %}">
+      {% if request.GET.q %}
+        <input type="hidden" name="q" value="{{ request.GET.q }}">
+      {% endif %}
+
+      <div class="filter-panel">
+        <div class="fp-title">Hostel Type</div>
+        <label class="fck"><input type="checkbox" name="type" value="Self-Contained" {% if request.GET.type == 'Self-Contained' %}checked{% endif %}> <span class="fck-label">Self-Contained</span></label>
+        <label class="fck"><input type="checkbox" name="type" value="Room & Parlour" {% if request.GET.type == 'Room & Parlour' %}checked{% endif %}> <span class="fck-label">Room &amp; Parlour</span></label>
+        <label class="fck"><input type="checkbox" name="type" value="Single Room" {% if request.GET.type == 'Single Room' %}checked{% endif %}> <span class="fck-label">Single Room</span></label>
+      </div>
+
+      <div class="filter-panel">
+        <div class="fp-title">Max Price</div>
+        <input type="range" class="range-sl" id="pr" name="price" min="0" max="300000" step="5000" value="{{ request.GET.price|default:'300000' }}" oninput="syncPrice(this,'pv')">
+        <div class="range-row"><span>₦0</span><span>₦300k</span></div>
+        <div class="range-val" id="pv">Up to ₦{{ request.GET.price|default:'300,000' }}</div>
+      </div>
+
+      <div class="d-flex flex-column gap-2">
+        <button type="submit" class="btn-hs btn-green">Apply Filters</button>
+        <a href="{% url 'Search' %}" class="btn-hs btn-outline">Clear All</a>
+      </div>
+    </form>
+  </aside>
+
+  <!-- Results column -->
+  <div>
+    <div class="toolbar">
+      <div class="toolbar-lbl">
+        Showing <strong>{{ hostels|length }}</strong> verified hostel{{ hostels|length|pluralize }}
+      </div>
+      <select class="sort-sel" id="sort-sel" onchange="sortResults()">
+        <option value="relevant">Most Relevant</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+    </div>
+
+    <!-- Results grid -->
+    <div class="results-grid" id="results-grid">
+
+      {% for hostel in hostels %}
+      <div class="hcard" data-price="{{ hostel.price_session }}" data-name="{{ hostel.hostel_name|lower }}" data-loc="{{ hostel.location|lower }}">
+
+        <!-- Card image — real photo or gradient fallback -->
+        <div class="hcard-img">
+          {% if hostel.images.all %}
+            <img src="{{ hostel.images.first.image.url }}" alt="{{ hostel.hostel_name }}">
+          {% else %}
+            <div class="hcard-img-fallback"></div>
+          {% endif %}
+          <div class="hcard-img-overlay">
+            <span class="chip">✓ Verified</span>
+            {% if user.is_authenticated and user.student %}
+              <a href="{% url 'toggle_save' hostel.pk %}"
+                class="save-btn {% if hostel.pk in saved_ids %}saved{% endif %}"
+                title="{% if hostel.pk in saved_ids %}Remove from saved{% else %}Save hostel{% endif %}">
+                {% if hostel.pk in saved_ids %}❤️{% else %}🤍{% endif %}
+              </a>
+            {% else %}
+              <a href="{% url 'login' %}" class="save-btn" title="Login to save">🤍</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="hcard-body">
+          <div class="hcard-name">{{ hostel.hostel_name }}</div>
+          <div class="hcard-loc">📍 {{ hostel.location }}{% if hostel.distance %} · {{ hostel.distance }}{% endif %}</div>
+          <div class="tags">
+            <span class="tag">{{ hostel.hostel_type }}</span>
+            {% if hostel.has_wifi %}<span class="tag">WiFi</span>{% endif %}
+            {% if hostel.has_water %}<span class="tag">Borehole</span>{% endif %}
+            {% if hostel.has_security %}<span class="tag">Security</span>{% endif %}
+            {% if hostel.has_electricity %}<span class="tag">24hr Light</span>{% endif %}
+            {% if hostel.has_generator %}<span class="tag">Generator</span>{% endif %}
+          </div>
+          <div class="hcard-ft">
+            <div class="price">₦{{ hostel.price_session }} <small>/session</small></div>
+          </div>
+          <a href="{% url 'hostel_detail' hostel.pk %}" class="view-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:56px 20px;">
+        <div style="font-size:40px;margin-bottom:12px;">🔍</div>
+        <h3 style="font-family:'DM Serif Display',serif;color:var(--f);margin-bottom:6px;">No hostels found</h3>
+        <p style="color:var(--mu);">Try adjusting your search or clearing the filters.</p>
+        <a href="{% url 'Search' %}" style="display:inline-block;margin-top:14px;padding:10px 22px;background:var(--a);color:#fff;border-radius:8px;font-size:14px;font-weight:600;">Clear Filters</a>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="hs-footer">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="foot-logo">🏠 HostelSearch</div>
+      <p>Verified off-campus student accommodation near Osun State University.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Students</h4>
+      <a href="{% url 'Search' %}">Browse Hostels</a>
+      <a href="{% url 'register' %}">Create Account</a>
+    </div>
+    <div class="foot-col">
+      <h4>Agents</h4>
+      <a href="{% url 'register' %}">Register as Agent</a>
+      <a href="{% url 'submit_listing' %}">Submit Listing</a>
+    </div>
+    <div class="foot-col">
+      <h4>Platform</h4>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 HostelSearch · UNIOSUN</span>
+    <span>Computer Science Final Year Project</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  window.syncPrice = function(slider, labelId){
+    var v = parseInt(slider.value);
+    document.getElementById(labelId).textContent =
+      v >= 300000 ? 'Up to \u20a6300,000' : 'Up to \u20a6' + v.toLocaleString();
+  };
+
+  window.toggleSave = function(btn){
+    btn.classList.toggle('saved');
+    btn.textContent = btn.classList.contains('saved') ? '\u2764\ufe0f' : '\uD83E\uDD0D';
+    btn.title = btn.classList.contains('saved') ? 'Remove from saved' : 'Save hostel';
+  };
+
+  window.sortResults = function(){
+    var val  = document.getElementById('sort-sel').value;
+    var grid = document.getElementById('results-grid');
+    var cards = Array.from(grid.querySelectorAll('.hcard'));
+    cards.sort(function(a,b){
+      if(val === 'price-asc')  return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+      if(val === 'price-desc') return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+      return 0;
+    });
+    cards.forEach(function(c){ grid.appendChild(c); });
+  };
+
+  // sync price slider label on load
+  var pr = document.getElementById('pr');
+  if(pr) syncPrice(pr, 'pv');
+})();
+</script>
+
+</body>
+</html>

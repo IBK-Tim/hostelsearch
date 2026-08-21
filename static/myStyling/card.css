@@ -1,0 +1,12 @@
+.rooms {
+    height: 250px;
+}
+
+@media (max-width: 576px) {
+    .rooms {
+        height: 220px;
+    }
+}
+#h2{
+    font-size: 800px;
+}

@@ -1,0 +1,14 @@
+
+      body{
+        background-color: rgb(199, 199, 199);
+      }
+
+      #total-order{
+        background-color: rgb(43, 167, 167);
+      }
+      #order-deliver{
+        background-color: rgb(35, 107, 165);
+      }
+      #order-pending{
+        background-color: rgb(27, 142, 162);
+      }

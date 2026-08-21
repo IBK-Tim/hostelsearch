@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Agent Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *,*::before,*::after{box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .hs-nav{background:var(--f);height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .nav-right{display:flex;align-items:center;gap:10px;}
+    .nav-uname{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;}
+    .nav-av{width:34px;height:34px;background:var(--a);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;font-family:'DM Serif Display',serif;cursor:pointer;flex-shrink:0;}
+    .mob-toggle{background:none;border:none;color:rgba(255,255,255,0.7);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background 0.18s;}
+    .mob-toggle:hover{background:rgba(255,255,255,0.1);}
+    .dash-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px);}
+    .sidebar{background:var(--f);padding:28px 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+    .sb-user{padding:0 20px 22px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:14px;}
+    .sb-av{width:48px;height:48px;border-radius:12px;background:var(--a);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:#fff;margin-bottom:10px;}
+    .sb-name{color:#fff;font-size:14px;font-weight:600;}
+    .sb-role{color:var(--p);font-size:12px;margin-top:2px;}
+    .sb-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(45,158,88,0.25);border:1px solid rgba(76,195,117,0.4);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:600;color:#4cc375;margin-top:6px;}
+    .sb-nav{padding:0 10px;}
+    .sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,0.62);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:all 0.18s;width:100%;text-align:left;font-family:'DM Sans',sans-serif;border:none;background:none;}
+    .sb-item:hover{background:rgba(255,255,255,0.08);color:#fff;}
+    .sb-item.on{background:var(--a);color:#fff;}
+    .sb-item .ico{font-size:15px;width:18px;flex-shrink:0;}
+    .sb-sep{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:10px;}
+    .mob-sidebar{width:260px !important;background:var(--f) !important;}
+    .mob-sidebar .offcanvas-body{padding:0;}
+    .dash-body{padding:36px;background:var(--bg);}
+    .dash-head{margin-bottom:28px;}
+    .dash-head h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--f);margin-bottom:4px;}
+    .dash-head p{font-size:14px;color:var(--mu);margin:0;}
+    .dash-pane{display:none;}
+    .dash-pane.active{display:block;}
+    .stat{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:20px;transition:border-color 0.18s;}
+    .stat:hover{border-color:var(--p);}
+    .stat.hi{background:var(--a);border-color:var(--a);}
+    .stat-n{font-family:'DM Serif Display',serif;font-size:36px;color:var(--f);line-height:1;}
+    .stat.hi .stat-n{color:#fff;}
+    .stat-l{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--mu);margin-top:5px;}
+    .stat.hi .stat-l{color:rgba(255,255,255,0.8);}
+    .stat-amber{background:#fef9c3;border-color:#fde68a;}
+    .stat-amber .stat-n{color:#92400e;}
+    .stat-amber .stat-l{color:#92400e;}
+    .blk{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:24px;margin-bottom:20px;}
+    .blk-t{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--f);padding-left:12px;border-left:3px solid var(--a);margin-bottom:18px;display:block;}
+    .listing-tbl{width:100%;border-collapse:collapse;}
+    .listing-tbl thead tr{background:var(--f);}
+    .listing-tbl thead th{padding:11px 14px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.8);text-align:left;}
+    .listing-tbl tbody tr{border-bottom:1.5px solid var(--li);transition:background 0.15s;}
+    .listing-tbl tbody tr:hover{background:var(--bg);}
+    .listing-tbl tbody tr:last-child{border-bottom:none;}
+    .listing-tbl tbody td{padding:13px 14px;font-size:13px;vertical-align:middle;}
+    .tbl-name{font-weight:600;font-size:14px;color:var(--ink);}
+    .tbl-sub{font-size:11px;color:var(--mu);margin-top:2px;}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+    .chip-approved{background:var(--p);color:var(--f);border:1px solid var(--a);}
+    .chip-pending{background:#fef9c3;color:#92400e;border:1px solid #fde68a;}
+    .chip-rejected{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+    .ico-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--li);background:var(--s);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.18s;text-decoration:none;}
+    .ico-btn:hover{border-color:var(--a);background:var(--bg);}
+    .ico-btn-del:hover{border-color:#fca5a5;background:#fee2e2;}
+    .mini-card{background:var(--s);border:1.5px solid var(--li);border-radius:10px;overflow:hidden;transition:all 0.2s;}
+    .mini-card:hover{border-color:var(--a);transform:translateY(-2px);box-shadow:0 4px 16px rgba(10,61,31,0.07);}
+    .mini-img{height:90px;position:relative;overflow:hidden;}
+    .mi1{background:linear-gradient(145deg,#145c30,#2d9e58);}
+    .mi2{background:linear-gradient(145deg,#0a3d1f,#1e7a42);}
+    .mi3{background:linear-gradient(145deg,#1e7a42,#4cc375);}
+    .mini-body{padding:12px;}
+    .mini-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+    .mini-loc{font-size:11px;color:var(--mu);margin-bottom:8px;}
+    .mini-ft{display:flex;justify-content:space-between;align-items:center;}
+    .mini-price{font-family:'DM Serif Display',serif;font-size:14px;color:var(--f);}
+    .hs-lbl{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;}
+    .hs-lbl .req{color:var(--a);}
+    .hs-inp{border:1.5px solid var(--li) !important;border-radius:8px !important;padding:11px 14px !important;font-size:14px !important;color:var(--ink) !important;font-family:'DM Sans',sans-serif !important;background:#fff !important;box-shadow:none !important;transition:border-color 0.18s !important;width:100%;}
+    .hs-inp:focus{border-color:var(--a) !important;box-shadow:0 0 0 3px rgba(45,158,88,0.08) !important;outline:none !important;}
+    .hs-inp::placeholder{color:#a0b8a8;}
+    textarea.hs-inp{resize:vertical;min-height:110px;line-height:1.65;}
+    .fac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .fac-chk{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1.5px solid var(--li);border-radius:8px;cursor:pointer;font-size:13px;transition:all 0.18s;}
+    .fac-chk:hover{border-color:var(--a);background:var(--bg);}
+    .fac-chk input{accent-color:var(--a);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+    .upload-zone{border:1.5px dashed var(--a);border-radius:10px;padding:36px;text-align:center;background:var(--bg);cursor:pointer;transition:all 0.2s;}
+    .upload-zone:hover{background:var(--p);border-color:var(--f);}
+    .upload-zone input{display:none;}
+    .upload-icon{font-size:36px;margin-bottom:10px;}
+    .upload-zone p{font-size:14px;color:var(--mu);margin:0;}
+    .pw-wrap{position:relative;}
+    .pw-wrap .hs-inp{padding-right:44px !important;}
+    .eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mu);font-size:16px;padding:0;transition:color 0.18s;line-height:1;}
+    .eye:hover{color:var(--a);}
+    .hs-save{padding:11px 28px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+    .hs-save:hover{background:#1e7a42;transform:translateY(-1px);}
+    .hs-save:disabled{opacity:0.55;cursor:not-allowed;transform:none !important;}
+    .btn-ol{padding:10px 20px;background:transparent;color:var(--mu);border:1.5px solid var(--li);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+    .btn-ol:hover{border-color:var(--a);color:var(--a);}
+    .qa-btn{padding:9px 18px;font-size:13px;font-weight:600;border:1.5px solid var(--li);border-radius:8px;background:#fff;color:var(--mu);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;text-decoration:none;display:inline-block;}
+    .qa-btn:hover{border-color:var(--a);color:var(--a);}
+    .prof-av-row{display:flex;align-items:center;gap:18px;padding:20px;background:var(--bg);border:1.5px solid var(--li);border-radius:12px;margin-bottom:22px;}
+    .prof-av{width:64px;height:64px;border-radius:16px;background:var(--a);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:28px;color:#fff;flex-shrink:0;}
+    .prof-av-info h3{font-size:16px;font-weight:600;color:var(--f);margin-bottom:2px;}
+    .prof-av-info p{font-size:13px;color:var(--mu);margin:0;}
+    .danger-zone{border:1.5px solid #fca5a5;border-radius:12px;padding:20px;background:#fff;}
+    .danger-zone h4{font-size:14px;font-weight:600;color:#991b1b;margin-bottom:6px;}
+    .danger-zone p{font-size:13px;color:var(--mu);margin-bottom:14px;}
+    .btn-danger{padding:10px 20px;background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+    .btn-danger:hover{background:#fecaca;}
+    .pending-notice{background:#fef9c3;border:1.5px solid #fde68a;border-radius:10px;padding:14px 18px;font-size:13px;color:#92400e;display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .empty-s{text-align:center;padding:40px 20px;}
+    .empty-s .ei{font-size:36px;margin-bottom:10px;}
+    .empty-s h3{font-family:'DM Serif Display',serif;font-size:18px;color:var(--f);margin-bottom:6px;}
+    .empty-s p{font-size:13px;color:var(--mu);}
+    .alert-ok{color:#166534;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#dcfce7;border-radius:8px;}
+    .alert-err{color:#dc2626;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#fee2e2;border-radius:8px;}
+    @media(max-width:991px){.dash-layout{grid-template-columns:1fr;}.sidebar{display:none;}.dash-body{padding:20px;}.fac-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:576px){.dash-body{padding:14px;}.nav-uname{display:none;}.fac-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="hs-nav">
+  <div class="d-flex align-items-center gap-3">
+    <button class="mob-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobSidebar">☰</button>
+    <a href="{% url 'agent_dashboard' %}" class="logo">
+      <div class="dot">🏠</div>
+      <span class="d-none d-sm-inline">HostelSearch</span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-uname">{{ agent.user.first_name }} {{ agent.user.last_name }}</span>
+    <div class="nav-av" title="My account">{{ agent.user.first_name|slice:":1" }}</div>
+  </div>
+</nav>
+
+<!-- MOBILE SIDEBAR -->
+<div class="offcanvas offcanvas-start mob-sidebar" tabindex="-1" id="mobSidebar">
+  <div class="offcanvas-body">
+    <div class="sb-user pt-4">
+      <div class="sb-av">{{ agent.user.first_name|slice:":1" }}</div>
+      <div class="sb-name">{{ agent.user.first_name }} {{ agent.user.last_name }}</div>
+      <div class="sb-role">Hostel Agent</div>
+      <div class="sb-badge">✓ Verified Agent</div>
+    </div>
+    <div class="sb-nav">
+      <button class="sb-item on" onclick="switchPane('overview'); closeMob()"><span class="ico">📊</span>Dashboard</button>
+      <button class="sb-item" onclick="switchPane('listings'); closeMob()"><span class="ico">🏠</span>My Listings</button>
+      <button class="sb-item" onclick="switchPane('add'); closeMob()"><span class="ico">➕</span>Add New Listing</button>
+      <button class="sb-item" onclick="switchPane('profile'); closeMob()"><span class="ico">👤</span>Profile</button>
+      <hr class="sb-sep">
+      <a href="{% url 'logout' %}" class="sb-item"><span class="ico">🚪</span>Logout</a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="dash-layout">
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-user">
+      <div class="sb-av">{{ agent.user.first_name|slice:":1" }}</div>
+      <div class="sb-name">{{ agent.user.first_name }} {{ agent.user.last_name }}</div>
+      <div class="sb-role">Hostel Agent</div>
+      <div class="sb-badge">✓ Verified Agent</div>
+    </div>
+    <nav class="sb-nav">
+      <button class="sb-item on" id="nav-overview" onclick="switchPane('overview')"><span class="ico">📊</span>Dashboard</button>
+      <button class="sb-item" id="nav-listings" onclick="switchPane('listings')"><span class="ico">🏠</span>My Listings</button>
+      <button class="sb-item" id="nav-add" onclick="switchPane('add')"><span class="ico">➕</span>Add New Listing</button>
+      <button class="sb-item" id="nav-profile" onclick="switchPane('profile')"><span class="ico">👤</span>Profile</button>
+      <hr class="sb-sep">
+      <a href="{% url 'logout' %}" class="sb-item"><span class="ico">🚪</span>Logout</a>
+    </nav>
+  </aside>
+
+  <!-- DASHBOARD BODY -->
+  <main class="dash-body">
+
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        {% if 'success' in message.tags %}
+          <div class="alert-ok">{{ message }}</div>
+        {% else %}
+          <div class="alert-err">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <!-- PANE 1 — OVERVIEW -->
+    <div class="dash-pane active" id="pane-overview">
+      <div class="dash-head">
+        <h1>Welcome, {{ agent.user.first_name }} 👋</h1>
+        <p>Manage your hostel listings and track activity.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-sm-3">
+          <div class="stat hi">
+            <div class="stat-n">{{ total_listings }}</div>
+            <div class="stat-l">Total Listings</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3">
+          <div class="stat">
+            <div class="stat-n">{{ approved_count }}</div>
+            <div class="stat-l">Approved</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3">
+          <div class="stat stat-amber">
+            <div class="stat-n">{{ pending_count }}</div>
+            <div class="stat-l">Pending Review</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3">
+          <div class="stat">
+            <div class="stat-n">0</div>
+            <div class="stat-l">Total Views</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending notice — only show if there are pending listings -->
+      {% if pending_count > 0 %}
+      <div class="pending-notice">
+        <span style="font-size:18px;">⏳</span>
+        <span>You have <strong>{{ pending_count }} listing{{ pending_count|pluralize }}</strong> currently pending admin review. You will be notified once approved.</span>
+      </div>
+      {% endif %}
+
+      <!-- Recent listings mini preview -->
+      <div class="blk">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="blk-t mb-0">My Listings</span>
+          <button class="qa-btn" onclick="switchPane('listings')">View all →</button>
+        </div>
+
+        {% if listings %}
+        <div class="row g-3">
+          {% for listing in listings|slice:":3" %}
+          <div class="col-12 col-sm-4">
+            <div class="mini-card">
+              <div class="mini-img" style="position:relative;overflow:hidden;">
+                {% if listing.images.all %}
+                  <img src="{{ listing.images.first.image.url }}"
+                       style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+                       alt="{{ listing.hostel_name }}">
+                {% else %}
+                  <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);"></div>
+                {% endif %}
+              </div>
+              <div class="mini-body">
+                <div class="mini-name">{{ listing.hostel_name }}</div>
+                <div class="mini-loc">📍 {{ listing.location }}</div>
+                <div class="mini-ft">
+                  <div class="mini-price">₦{{ listing.price_session }}</div>
+                  {% if listing.status == 'approved' %}
+                    <span class="chip chip-approved">✓ Approved</span>
+                  {% elif listing.status == 'pending' %}
+                    <span class="chip chip-pending">⏳ Pending</span>
+                  {% else %}
+                    <span class="chip chip-rejected">✗ Rejected</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-s">
+          <div class="ei">🏠</div>
+          <h3>No listings yet</h3>
+          <p>Add your first hostel listing to get started.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Quick actions -->
+      <div class="blk">
+        <span class="blk-t">Quick Actions</span>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="qa-btn" onclick="switchPane('add')">➕ Add New Listing</button>
+          <button class="qa-btn" onclick="switchPane('listings')">🏠 View All Listings</button>
+          <button class="qa-btn" onclick="switchPane('profile')">👤 Edit Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 2 — MY LISTINGS -->
+    <div class="dash-pane" id="pane-listings">
+      <div class="dash-head">
+        <h1>My Listings</h1>
+        <p>All hostel listings you have submitted.</p>
+      </div>
+
+      <div class="blk" style="padding:0;overflow:hidden;">
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+          <span class="blk-t mb-0" style="padding:0;border:none;">{{ total_listings }} Listing{{ total_listings|pluralize }}</span>
+          <button class="hs-save" style="padding:9px 18px;font-size:13px;" onclick="switchPane('add')">+ Add New Listing</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="listing-tbl">
+            <thead>
+              <tr>
+                <th>Hostel</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for listing in listings %}
+              <tr>
+                <td>
+                  <div class="tbl-name">{{ listing.hostel_name }}</div>
+                  <div class="tbl-sub">📍 {{ listing.location }} · Added {{ listing.created_at|date:"M Y" }}</div>
+                </td>
+                <td>{{ listing.hostel_type }}</td>
+                <td>₦{{ listing.price_session }}</td>
+                <td>
+                  {% if listing.status == 'approved' %}
+                    <span class="chip chip-approved">✓ Approved</span>
+                  {% elif listing.status == 'pending' %}
+                    <span class="chip chip-pending">⏳ Pending</span>
+                  {% else %}
+                    <span class="chip chip-rejected">✗ Rejected</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex gap-1">
+                    {% if listing.status == 'approved' %}
+                      <a href="{% url 'hostel_detail' listing.pk %}" class="ico-btn" title="View live listing">👁</a>
+                    {% else %}
+                      <span class="ico-btn" style="opacity:0.4;cursor:not-allowed;" title="Pending approval">👁</span>
+                    {% endif %}
+                    <button class="ico-btn ico-btn-del" title="Delete listing" onclick="deleteListing(this, {{ listing.pk }})">🗑</button>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" style="text-align:center;padding:40px;color:var(--mu);">
+                  No listings yet. Click "Add New Listing" to get started.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 3 — ADD NEW LISTING -->
+    <div class="dash-pane" id="pane-add">
+      <div class="dash-head">
+        <h1>Add New Listing</h1>
+        <p>Fill in the details below. Your listing will be reviewed by an admin before going live.</p>
+      </div>
+
+      <form method="POST" action="{% url 'submit_listing' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Basic Info -->
+        <div class="blk">
+          <span class="blk-t">Basic Information</span>
+          <div class="mb-3">
+            <label class="hs-lbl">Hostel Name <span class="req">*</span></label>
+            <input type="text" name="hostel_name" class="hs-inp form-control" placeholder="e.g. Greenview Court Hostel" required>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Hostel Type <span class="req">*</span></label>
+              <select name="hostel_type" class="hs-inp form-control" required>
+                <option value="">Select type</option>
+                <option value="Self-Contained">Self-Contained</option>
+                <option value="Room & Parlour">Room &amp; Parlour</option>
+                <option value="Single Room">Single Room</option>
+              </select>
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Price Per Session (₦) <span class="req">*</span></label>
+              <input type="number" name="price_session" class="hs-inp form-control" placeholder="e.g. 120000" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">Location / Address <span class="req">*</span></label>
+            <input type="text" name="location" class="hs-inp form-control" placeholder="Street name, landmarks, area near UNIOSUN" required>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Distance from UNIOSUN Gate</label>
+              <select name="distance" class="hs-inp form-control">
+                <option value="Under 5 mins walk">Under 5 mins walk</option>
+                <option value="5 – 10 mins walk">5 – 10 mins walk</option>
+                <option value="10 – 20 mins walk">10 – 20 mins walk</option>
+              </select>
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Total Rooms Available</label>
+              <input type="number" name="total_rooms" class="hs-inp form-control" placeholder="e.g. 12">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">Description <span class="req">*</span></label>
+            <textarea name="description" class="hs-inp form-control" placeholder="Describe the hostel — environment, condition, access rules…" required></textarea>
+          </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="blk">
+          <span class="blk-t">Facilities</span>
+          <div class="fac-grid">
+            <label class="fac-chk"><input type="checkbox" name="fac" value="electricity" checked> 24hr Electricity</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="water" checked> Borehole Water</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="security" checked> 24hr Security</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="wifi"> WiFi Internet</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="generator"> Generator Backup</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="parking" checked> Parking Space</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="bathroom" checked> Private Bathroom</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="tiles" checked> Tiled Rooms</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="ac"> Air Conditioning</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="burglar" checked> Burglar Proof</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="cctv"> CCTV Camera</label>
+            <label class="fac-chk"><input type="checkbox" name="fac" value="kitchen" checked> Kitchenette</label>
+          </div>
+        </div>
+
+        <!-- Photos -->
+        <div class="blk">
+          <span class="blk-t">Photos</span>
+          <label class="upload-zone" onclick="document.getElementById('photo-input').click()">
+            <div class="upload-icon">📷</div>
+            <p><strong>Click to upload photos</strong></p>
+            <p style="margin-top:6px;font-size:12px;">Upload at least 3 photos — rooms, bathroom, entrance. JPG or PNG only. Max 5MB each.</p>
+            <input type="file" id="photo-input" name="photos" multiple accept="image/*" onchange="previewPhotos(this)">
+          </label>
+          <div class="d-flex flex-wrap gap-2 mt-3" id="photo-preview"></div>
+        </div>
+
+        <!-- Contact -->
+        <div class="blk">
+          <span class="blk-t">Contact Information</span>
+          <div class="row g-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Phone Number <span class="req">*</span></label>
+              <input type="tel" name="phone" class="hs-inp form-control" placeholder="080 1234 5678" value="{{ agent.phone }}" required>
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">WhatsApp Number</label>
+              <input type="tel" name="whatsapp" class="hs-inp form-control" placeholder="If different from phone">
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-3 justify-content-end">
+          <button type="button" class="btn-ol" onclick="switchPane('listings')">Cancel</button>
+          <button type="submit" class="hs-save" id="submit-btn">Submit for Review</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- PANE 4 — PROFILE -->
+    <div class="dash-pane" id="pane-profile">
+      <div class="dash-head">
+        <h1>Profile Settings</h1>
+        <p>Your agent account information.</p>
+      </div>
+
+      <div class="prof-av-row">
+        <div class="prof-av">{{ agent.user.first_name|slice:":1" }}</div>
+        <div class="prof-av-info">
+          <h3>{{ agent.user.first_name }} {{ agent.user.last_name }}</h3>
+          <p>Hostel Agent · <span style="color:var(--a);font-weight:600;">✓ Verified</span></p>
+        </div>
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Personal Information</span>
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">First name</label>
+            <input type="text" class="hs-inp form-control" value="{{ agent.user.first_name }}" readonly>
+          </div>
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">Last name</label>
+            <input type="text" class="hs-inp form-control" value="{{ agent.user.last_name }}" readonly>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="hs-lbl">Email address</label>
+          <input type="email" class="hs-inp form-control" value="{{ agent.user.email }}" readonly>
+        </div>
+        <div class="mb-3">
+          <label class="hs-lbl">Phone number</label>
+          <input type="tel" class="hs-inp form-control" value="{{ agent.phone }}" readonly>
+        </div>
+        <div class="mb-3">
+          <label class="hs-lbl">ID Document</label>
+          <div style="padding:12px 14px;background:var(--bg);border:1.5px solid var(--li);border-radius:8px;font-size:13px;color:var(--mu);">
+            ✓ Identity document verified by admin
+          </div>
+        </div>
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Change Password</span>
+        <form onsubmit="changePass(event)">
+          <div class="mb-3">
+            <label class="hs-lbl">Current password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-old" placeholder="Enter current password">
+              <button type="button" class="eye" onclick="showPass('p-old',this)">👁</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">New password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-new" placeholder="At least 8 characters">
+              <button type="button" class="eye" onclick="showPass('p-new',this)">👁</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">Confirm new password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-conf" placeholder="Repeat new password">
+              <button type="button" class="eye" onclick="showPass('p-conf',this)">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="hs-save" id="pass-btn">Update Password</button>
+        </form>
+      </div>
+
+      <div class="danger-zone">
+        <h4>Delete Account</h4>
+        <p>Deleting your account will permanently remove all your listings and data. This cannot be undone.</p>
+        <button class="btn-danger" onclick="delAccount()">Delete My Account</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  window.switchPane = function(name){
+    document.querySelectorAll('.dash-pane').forEach(function(p){p.classList.remove('active');});
+    document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('on');});
+    var pane=document.getElementById('pane-'+name);
+    var btn=document.getElementById('nav-'+name);
+    if(pane)pane.classList.add('active');
+    if(btn)btn.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  window.deleteListing = function(btn, pk){
+    if(!confirm('Delete this listing? This cannot be undone.')) return;
+    var row=btn.closest('tr');
+    if(!row) return;
+    row.style.transition='opacity 0.35s, transform 0.35s';
+    row.style.opacity='0';
+    row.style.transform='translateX(20px)';
+    setTimeout(function(){row.remove();},360);
+  };
+
+  window.previewPhotos = function(input){
+    var preview=document.getElementById('photo-preview');
+    preview.innerHTML='';
+    Array.from(input.files).forEach(function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        var div=document.createElement('div');
+        div.style.cssText='width:80px;height:80px;border-radius:8px;overflow:hidden;border:1.5px solid var(--li);flex-shrink:0;';
+        var img=document.createElement('img');
+        img.src=e.target.result;
+        img.style.cssText='width:100%;height:100%;object-fit:cover;';
+        div.appendChild(img);
+        preview.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  window.changePass=function(e){
+    e.preventDefault();
+    var np=document.getElementById('p-new').value;
+    var conf=document.getElementById('p-conf').value;
+    if(!document.getElementById('p-old').value||!np||!conf){alert('Please fill in all password fields.');return;}
+    if(np.length<8){alert('New password must be at least 8 characters.');return;}
+    if(np!==conf){alert('Passwords do not match.');return;}
+    var btn=document.getElementById('pass-btn');
+    btn.textContent='Updating\u2026';
+    btn.disabled=true;
+    setTimeout(function(){
+      btn.textContent='Updated \u2713';
+      ['p-old','p-new','p-conf'].forEach(function(id){document.getElementById(id).value='';});
+      setTimeout(function(){btn.textContent='Update Password';btn.disabled=false;},2000);
+    },1000);
+  };
+
+  window.delAccount=function(){
+    if(confirm('Are you sure? All your listings and data will be permanently deleted.')){
+      window.location.href="{% url 'logout' %}";
+    }
+  };
+
+  window.showPass=function(id,btn){
+    var el=document.getElementById(id);
+    var show=el.type==='password';
+    el.type=show?'text':'password';
+    btn.textContent=show?'\uD83D\uDE48':'\uD83D\uDC41';
+  };
+
+  window.closeMob=function(){
+    var el=document.getElementById('mobSidebar');
+    var oc=bootstrap.Offcanvas.getInstance(el);
+    if(oc)oc.hide();
+  };
+})();
+</script>
+
+</body>
+</html>

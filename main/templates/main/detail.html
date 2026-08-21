@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — {{ hostel.hostel_name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *,*::before,*::after{box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .hs-nav{background:var(--f);height:60px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .nav-links{display:flex;gap:2px;}
+    .nav-links a{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;padding:7px 12px;border-radius:7px;transition:all 0.18s;}
+    .nav-links a:hover{background:rgba(255,255,255,0.1);color:#fff;}
+    .nav-end{display:flex;gap:8px;}
+    .btn-hs{display:inline-flex;align-items:center;justify-content:center;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;text-decoration:none;}
+    .btn-green{background:var(--a);color:#fff;}
+    .btn-green:hover{background:#1e7a42;color:#fff;}
+    .btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:#fff;}
+    .btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff;}
+
+    /* breadcrumb */
+    .bc{padding:12px 44px;background:var(--s);border-bottom:1.5px solid var(--li);font-size:12px;color:var(--mu);display:flex;gap:6px;align-items:center;}
+    .bc a{color:var(--a);}
+
+    /* gallery */
+    .gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:165px 165px;gap:4px;height:334px;background:#000;}
+    .gc{overflow:hidden;cursor:pointer;position:relative;}
+    .gc.main{grid-row:1/3;}
+    .gc img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
+    .gc:hover img{transform:scale(1.04);}
+    .gc-fallback{width:100%;height:100%;background:linear-gradient(150deg,#145c30,#2d9e58);}
+    .gc-fallback2{width:100%;height:100%;background:linear-gradient(150deg,#0a3d1f,#1e7a42);}
+    .gc-fallback3{width:100%;height:100%;background:linear-gradient(150deg,#1e7a42,#4cc375);}
+    .more-over{position:absolute;inset:0;background:rgba(10,61,31,0.6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;}
+
+    /* layout */
+    .outer{background:var(--bg);}
+    .inner{display:grid;grid-template-columns:1fr 340px;gap:28px;padding:32px 44px;max-width:1200px;margin:0 auto;}
+    .blk{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:24px;margin-bottom:18px;}
+    .blk-t{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--f);margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid var(--li);padding-left:12px;border-left:3px solid var(--a);}
+    .dname{font-family:'DM Serif Display',serif;font-size:30px;color:var(--f);margin-bottom:10px;}
+    .dmeta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px;}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--p);color:var(--f);border:1px solid var(--a);}
+    .stars{color:#f59e0b;font-size:13px;display:flex;align-items:center;gap:2px;}
+    .stars span{color:var(--mu);font-size:12px;margin-left:2px;}
+
+    /* facilities grid */
+    .fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .fac{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg);border:1.5px solid var(--li);border-radius:8px;font-size:13px;}
+    .fdot{width:7px;height:7px;background:var(--a);border-radius:50%;flex-shrink:0;}
+
+    /* pricing */
+    .pboxes{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+    .pbox{background:var(--bg);border:1.5px solid var(--li);border-radius:10px;padding:16px 22px;text-align:center;}
+    .pbox .am{font-family:'DM Serif Display',serif;font-size:24px;color:var(--f);}
+    .pbox .pd{font-size:12px;color:var(--mu);margin-top:3px;}
+    .warn{padding:12px 14px;background:#fef9c3;border:1.5px solid #fde047;border-radius:8px;font-size:13px;color:#92400e;line-height:1.6;}
+
+    /* reviews */
+    .rev{padding:16px 0;border-bottom:1.5px solid var(--li);}
+    .rev:last-of-type{border-bottom:none;}
+    .rev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .rev-u{display:flex;align-items:center;gap:10px;}
+    .rav{width:36px;height:36px;background:#1e7a42;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;}
+    .rname{font-weight:600;font-size:14px;}
+    .rdate{font-size:11px;color:var(--mu);}
+    .rtext{font-size:14px;color:var(--mu);line-height:1.7;}
+
+    /* review form */
+    .hs-inp{border:1.5px solid var(--li) !important;border-radius:8px !important;padding:11px 14px !important;font-size:14px !important;color:var(--ink) !important;font-family:'DM Sans',sans-serif !important;background:#fff !important;box-shadow:none !important;transition:border-color 0.18s !important;width:100%;}
+    .hs-inp:focus{border-color:var(--a) !important;box-shadow:0 0 0 3px rgba(45,158,88,0.08) !important;outline:none !important;}
+    .hs-inp::placeholder{color:#a0b8a8;}
+    textarea.hs-inp{resize:vertical;min-height:90px;line-height:1.65;}
+    .srow{display:flex;flex-direction:row-reverse;gap:4px;margin-bottom:12px;}
+    .srow input{display:none;}
+    .srow label{font-size:28px;color:var(--li);cursor:pointer;transition:color 0.15s;}
+    .srow label:hover,.srow label:hover~label,.srow input:checked~label{color:#f59e0b;}
+
+    /* contact card */
+    .cc{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:24px;position:sticky;top:80px;}
+    .ccp{font-family:'DM Serif Display',serif;font-size:34px;color:var(--f);}
+    .ccs{font-size:13px;color:var(--mu);padding-bottom:18px;margin-bottom:18px;border-bottom:1.5px solid var(--li);}
+    .agr{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border:1.5px solid var(--li);border-radius:10px;margin-bottom:16px;}
+    .agav{width:44px;height:44px;background:linear-gradient(135deg,#1e7a42,#4cc375);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;}
+    .agn{font-weight:600;font-size:14px;}
+    .ags{font-size:12px;color:var(--mu);margin-top:2px;}
+    .phbox{background:var(--bg);border:1.5px solid var(--li);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center;}
+    .phlbl{font-size:12px;color:var(--mu);margin-bottom:4px;}
+    .phnum{font-family:'DM Serif Display',serif;font-size:22px;color:var(--a);}
+    .phhint{font-size:11px;color:var(--mu);margin-top:4px;}
+    .phhint a{color:var(--a);}
+    .ccwarn{font-size:11px;color:var(--mu);text-align:center;line-height:1.6;margin-top:14px;}
+    .btn-full{display:block;width:100%;padding:12px;text-align:center;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;text-decoration:none;margin-bottom:14px;}
+    .btn-full:hover{background:#1e7a42;color:#fff;}
+
+    /* lightbox */
+    .lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;}
+    .lb.open{display:flex;}
+    .lbimg{max-width:80vw;max-height:80vh;border-radius:12px;object-fit:contain;}
+    .lbfall{width:480px;height:320px;border-radius:12px;background:linear-gradient(135deg,var(--f),#2d9e58);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'DM Serif Display',serif;font-size:18px;}
+    .lbclose{position:absolute;top:18px;right:22px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;}
+    .lbnav{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:26px;cursor:pointer;background:rgba(255,255,255,0.1);padding:10px 16px;border-radius:8px;transition:background 0.2s;}
+    .lbnav:hover{background:rgba(255,255,255,0.22);}
+    .lbprev{left:16px;}.lbnext{right:16px;}
+
+    .hs-footer{background:var(--f);color:rgba(255,255,255,0.55);padding:28px 44px 20px;border-top:1px solid rgba(255,255,255,0.1);}
+    .foot-bot{display:flex;justify-content:space-between;font-size:12px;}
+
+    @media(max-width:900px){
+      .inner{grid-template-columns:1fr;padding:16px 20px;}
+      .cc{position:static;}
+      .gallery{grid-template-columns:1fr 1fr;grid-template-rows:160px;height:160px;}
+      .gc.main{grid-row:auto;}
+      .fgrid{grid-template-columns:1fr 1fr;}
+      .bc{padding:10px 20px;}
+      .hs-nav{padding:0 20px;}
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="hs-nav">
+  <a href="{% url 'home' %}" class="logo">
+    <div class="dot">🏠</div>
+    HostelSearch
+  </a>
+  <div class="nav-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'Search' %}">Browse</a>
+  </div>
+  <div class="nav-end">
+    {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}" class="btn-hs btn-ghost">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-hs btn-ghost">Login</a>
+      <a href="{% url 'register' %}" class="btn-hs btn-green">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="bc">
+  <a href="{% url 'home' %}">Home</a><span>›</span>
+  <a href="{% url 'Search' %}">Browse</a><span>›</span>
+  <span>{{ hostel.hostel_name }}</span>
+</div>
+
+<!-- GALLERY -->
+{% with images=hostel.images.all %}
+<div class="gallery">
+  <!-- main large image -->
+  <div class="gc main" onclick="openLb(0)">
+    {% if images %}
+      <img src="{{ images.0.image.url }}" alt="{{ hostel.hostel_name }}">
+    {% else %}
+      <div class="gc-fallback"></div>
+    {% endif %}
+  </div>
+  <!-- second image -->
+  <div class="gc" onclick="openLb(1)">
+    {% if images|length > 1 %}
+      <img src="{{ images.1.image.url }}" alt="{{ hostel.hostel_name }}">
+    {% else %}
+      <div class="gc-fallback2"></div>
+    {% endif %}
+  </div>
+  <!-- third image -->
+  <div class="gc" onclick="openLb(2)">
+    {% if images|length > 2 %}
+      <img src="{{ images.2.image.url }}" alt="{{ hostel.hostel_name }}">
+    {% else %}
+      <div class="gc-fallback3"></div>
+    {% endif %}
+  </div>
+  <!-- fourth image -->
+  <div class="gc" onclick="openLb(3)">
+    {% if images|length > 3 %}
+      <img src="{{ images.3.image.url }}" alt="{{ hostel.hostel_name }}">
+    {% else %}
+      <div class="gc-fallback2"></div>
+    {% endif %}
+  </div>
+  <!-- fifth image with count -->
+  <div class="gc" onclick="openLb(4)">
+    {% if images|length > 4 %}
+      <img src="{{ images.4.image.url }}" alt="{{ hostel.hostel_name }}">
+      {% if images|length > 5 %}
+        <div class="more-over">+{{ images|length|add:"-5" }} Photos</div>
+      {% endif %}
+    {% else %}
+      <div class="gc-fallback3"></div>
+    {% endif %}
+  </div>
+</div>
+{% endwith %}
+
+<!-- MAIN CONTENT -->
+<div class="outer">
+  <div class="inner">
+    <div>
+      <div class="dname">{{ hostel.hostel_name }}</div>
+      <div class="dmeta">
+        <span class="chip">✓ Verified Listing</span>
+        {% if reviews %}
+          <div class="stars">★★★★☆ <span>{{ reviews|length }} review{{ reviews|length|pluralize }}</span></div>
+        {% endif %}
+        <span style="font-size:13px;color:var(--mu);">📍 {{ hostel.location }}{% if hostel.distance %} · {{ hostel.distance }}{% endif %}</span>
+      </div>
+
+      <!-- Overview -->
+      <div class="blk">
+        <div class="blk-t">Overview</div>
+        <p style="font-size:14px;color:var(--mu);line-height:1.8;">{{ hostel.description }}</p>
+      </div>
+
+      <!-- Facilities -->
+      <div class="blk">
+        <div class="blk-t">Facilities</div>
+        <div class="fgrid">
+          {% if hostel.has_electricity %}<div class="fac"><span class="fdot"></span>24hr Electricity</div>{% endif %}
+          {% if hostel.has_water %}<div class="fac"><span class="fdot"></span>Borehole Water</div>{% endif %}
+          {% if hostel.has_security %}<div class="fac"><span class="fdot"></span>24hr Security</div>{% endif %}
+          {% if hostel.has_wifi %}<div class="fac"><span class="fdot"></span>WiFi Internet</div>{% endif %}
+          {% if hostel.has_parking %}<div class="fac"><span class="fdot"></span>Parking Space</div>{% endif %}
+          {% if hostel.has_generator %}<div class="fac"><span class="fdot"></span>Generator Backup</div>{% endif %}
+          {% if hostel.has_bathroom %}<div class="fac"><span class="fdot"></span>Private Bathroom</div>{% endif %}
+          {% if hostel.has_kitchen %}<div class="fac"><span class="fdot"></span>Kitchenette</div>{% endif %}
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="blk">
+        <div class="blk-t">Pricing</div>
+        <div class="pboxes">
+          <div class="pbox">
+            <div class="am">₦{{ hostel.price_session }}</div>
+            <div class="pd">Per Session</div>
+          </div>
+          {% if hostel.price_semester %}
+          <div class="pbox">
+            <div class="am">₦{{ hostel.price_semester }}</div>
+            <div class="pd">Per Semester</div>
+          </div>
+          {% endif %}
+        </div>
+        <div class="warn">⚠️ Pay directly to the agent only after physically inspecting the hostel. HostelSearch does not process payments.</div>
+      </div>
+
+      <!-- Location -->
+      <div class="blk">
+        <div class="blk-t">Location</div>
+        <p style="font-size:14px;color:var(--mu);line-height:1.75;">
+          📍 {{ hostel.location }}
+          {% if hostel.distance %}
+          <br>Approximately <strong style="color:var(--a);">{{ hostel.distance }}</strong> from the UNIOSUN main gate.
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Reviews -->
+      <div class="blk">
+        <div class="blk-t">Student Reviews · {{ reviews|length }}</div>
+
+        {% for review in reviews %}
+        <div class="rev">
+          <div class="rev-top">
+            <div class="rev-u">
+              <div class="rav">{{ review.student.user.first_name|slice:":1" }}</div>
+              <div>
+                <div class="rname">{{ review.student.user.first_name }} {{ review.student.user.last_name }}</div>
+                <div class="rdate">{{ review.created_at|date:"F Y" }}</div>
+              </div>
+            </div>
+            <div class="stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="rtext">"{{ review.comment }}"</div>
+        </div>
+        {% empty %}
+        <p style="font-size:14px;color:var(--mu);padding:16px 0;">No reviews yet. Be the first to review this hostel.</p>
+        {% endfor %}
+
+        <!-- Write a review -->
+        {% if user.is_authenticated and user.student %}
+        <div style="margin-top:16px;padding-top:16px;border-top:1.5px solid var(--li);">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Write a Review</div>
+          <form method="POST" action="{% url 'hostel_detail' hostel.pk %}">
+            {% csrf_token %}
+            <div class="srow">
+              <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
+              <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
+              <input type="radio" name="rating" id="s3" value="3" checked><label for="s3">★</label>
+              <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
+              <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
+            </div>
+            <div style="margin-bottom:12px;">
+              <textarea name="comment" class="hs-inp" placeholder="Share your honest experience with this hostel…" required></textarea>
+            </div>
+            <button type="submit" style="padding:9px 20px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Submit Review</button>
+          </form>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div style="margin-top:16px;padding-top:16px;border-top:1.5px solid var(--li);">
+          <a href="{% url 'login' %}" class="btn-hs btn-green" style="font-size:13px;padding:9px 18px;">Login to write a review</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- CONTACT CARD -->
+    <div>
+      <div class="cc">
+        <div class="ccp">₦{{ hostel.price_session }}</div>
+        <div class="ccs">per session · {{ hostel.hostel_type }}</div>
+
+        <div class="agr">
+          <div class="agav">{{ hostel.agent.user.first_name|slice:":1" }}</div>
+          <div>
+            <div class="agn">{{ hostel.agent.user.first_name }} {{ hostel.agent.user.last_name }}</div>
+            <div class="ags"><span class="chip" style="font-size:10px;">✓ Verified Agent</span></div>
+          </div>
+        </div>
+
+        {% if show_contact %}
+          <!-- logged in — show real contact -->
+          <div class="phbox">
+            <div class="phlbl">Agent Contact</div>
+            <div class="phnum">{{ hostel.agent.phone }}</div>
+          </div>
+          <a href="tel:{{ hostel.agent.phone }}" class="btn-full">📞 Call Agent</a>
+        {% else %}
+          <!-- logged out — blur contact -->
+          <div class="phbox">
+            <div class="phlbl">Agent Contact</div>
+            <div class="phnum" style="filter:blur(5px);user-select:none;">08012345678</div>
+            <div class="phhint"><a href="{% url 'login' %}">Login</a> to see full contact</div>
+          </div>
+          <a href="{% url 'login' %}" class="btn-full">Login to Contact Agent</a>
+        {% endif %}
+
+        <div class="ccwarn">Never pay before inspecting the property in person.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <div class="lbclose" onclick="closeLb()">✕</div>
+  <div class="lbnav lbprev" onclick="lbPrev()">‹</div>
+  <div id="lb-content"></div>
+  <div class="lbnav lbnext" onclick="lbNext()">›</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="hs-footer">
+  <div class="foot-bot">
+    <span>© 2025 HostelSearch · UNIOSUN</span>
+    <a href="{% url 'Search' %}" style="color:#4cc375;">← Back to Browse</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// build image list from Django — real URLs or fallback gradients
+var images = [
+  {% for image in hostel.images.all %}
+    "{{ image.image.url }}"{% if not forloop.last %},{% endif %}
+  {% empty %}
+    null
+  {% endfor %}
+];
+
+var cur = 0;
+
+function openLb(i) {
+  cur = Math.min(i, images.length - 1 < 0 ? 0 : images.length - 1);
+  updLb();
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbPrev() { cur = (cur - 1 + Math.max(images.length, 1)) % Math.max(images.length, 1); updLb(); }
+function lbNext() { cur = (cur + 1) % Math.max(images.length, 1); updLb(); }
+
+function updLb() {
+  var c = document.getElementById('lb-content');
+  if (images.length > 0 && images[cur]) {
+    c.innerHTML = '<img class="lbimg" src="' + images[cur] + '" alt="Hostel photo">';
+  } else {
+    c.innerHTML = '<div class="lbfall">{{ hostel.hostel_name }}</div>';
+  }
+}
+
+document.getElementById('lb').addEventListener('click', function(e) {
+  if (e.target === this) closeLb();
+});
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') lbPrev();
+  if (e.key === 'ArrowRight') lbNext();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+    a{text-decoration:none;color:inherit;}
+    .nav{background:var(--f);height:60px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+    .page{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 60px);}
+    .left{background:var(--f);padding:60px 52px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+    .left::after{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(45,158,88,.18) 0%,transparent 70%);}
+    .ey{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4cc375;padding-left:12px;border-left:3px solid var(--a);margin-bottom:18px;display:block;}
+    .left h2{font-family:'DM Serif Display',serif;color:#fff;font-size:34px;line-height:1.1;margin-bottom:16px;}
+    .left h2 em{color:#4cc375;font-style:normal;}
+    .left p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.8;margin-bottom:30px;}
+    .tp{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+    .td{width:7px;height:7px;border-radius:50%;background:var(--a);flex-shrink:0;margin-top:7px;}
+    .tp p{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6;margin:0;}
+    .tp p strong{color:#fff;}
+    .right{background:#fff;padding:48px 52px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;}
+    .fh{margin-bottom:20px;}
+    .fh h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--f);margin-bottom:4px;}
+    .fh p{font-size:14px;color:var(--mu);}
+
+    /* role selector */
+    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .role-opt{border:1.5px solid var(--li);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .2s;user-select:none;}
+    .role-opt:hover{border-color:var(--p);background:var(--bg);}
+    .role-opt.selected{border-color:var(--a);background:var(--bg);}
+    .role-opt input{display:none;}
+    .ri{font-size:22px;margin-bottom:4px;}
+    .rn{font-size:13px;font-weight:600;color:var(--ink);}
+    .rd{font-size:11px;color:var(--mu);}
+
+    .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;}
+    .req{color:var(--a);}
+    .inp{border:1.5px solid var(--li)!important;border-radius:8px!important;padding:11px 14px!important;font-size:14px!important;color:var(--ink)!important;font-family:'DM Sans',sans-serif!important;background:#fff!important;box-shadow:none!important;transition:border-color .18s!important;width:100%;}
+    .inp:focus{border-color:var(--a)!important;box-shadow:0 0 0 3px rgba(45,158,88,.08)!important;outline:none!important;}
+    .inp::placeholder{color:#a0b8a8;}
+    .pw{position:relative;}
+    .pw .inp{padding-right:44px!important;}
+    .eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mu);font-size:16px;padding:0;line-height:1;}
+    .eye:hover{color:var(--a);}
+    .hint{font-size:12px;color:var(--mu);margin-top:4px;}
+    .sub{width:100%;padding:12px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:14px;transition:all .2s;}
+    .sub:hover{background:#1e7a42;transform:translateY(-1px);}
+    .sw{text-align:center;font-size:13px;color:var(--mu);}
+    .sw a{color:var(--a);font-weight:600;}
+    .tn{font-size:12px;color:var(--mu);text-align:center;margin-bottom:12px;line-height:1.6;}
+    .tn a{color:var(--a);}
+    .alert-err{color:#dc2626;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#fee2e2;border-radius:8px;}
+    .alert-ok{color:#166534;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#dcfce7;border-radius:8px;}
+
+    @media(max-width:768px){
+      .nav{padding:0 20px;}
+      .page{grid-template-columns:1fr;}
+      .left{display:none;}
+      .right{padding:28px 20px;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="{% url 'home' %}" class="logo">
+    <div class="dot">🏠</div>
+    HostelSearch
+  </a>
+  <a href="{% url 'login' %}" style="color:rgba(255,255,255,.7);font-size:13px;font-weight:500;">Already have an account? Login</a>
+</nav>
+
+<div class="page">
+
+  <div class="left">
+    <span class="ey">UNIOSUN Off-Campus Accommodation</span>
+    <h2>Join <em>HostelSearch</em><br>today.</h2>
+    <p>Create a free account to contact verified hostel agents and save hostels you like.</p>
+    <div class="tp"><div class="td"></div><p><strong>Students</strong> — browse verified hostels and contact agents directly.</p></div>
+    <div class="tp"><div class="td"></div><p><strong>Agents</strong> — list your hostel and reach hundreds of UNIOSUN students.</p></div>
+    <div class="tp"><div class="td"></div><p><strong>Free to use</strong> — no charges, no payment processing on HostelSearch.</p></div>
+  </div>
+
+  <div class="right">
+
+    <div class="fh">
+      <h1>Create account</h1>
+      <p>Choose your account type to get started.</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        {% if 'successfully' in message.tags or 'success' in message.tags %}
+          <div class="alert-ok">{{ message }}</div>
+        {% else %}
+          <div class="alert-err">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- hidden role field updated by JS -->
+      <input type="hidden" name="role" id="role-input" value="student">
+
+      <!-- role selector -->
+      <div class="role-grid">
+        <label class="role-opt selected" id="role-student" onclick="selectRole('student')">
+          <input type="radio" name="role_display" value="student" checked>
+          <div class="ri">🎓</div>
+          <div class="rn">Student</div>
+          <div class="rd">Find verified hostels</div>
+        </label>
+        <label class="role-opt" id="role-agent" onclick="selectRole('agent')">
+          <input type="radio" name="role_display" value="agent">
+          <div class="ri">🏠</div>
+          <div class="rn">Hostel Agent</div>
+          <div class="rd">List your property</div>
+        </label>
+      </div>
+
+      <!-- name -->
+      <div class="row g-2 mb-3">
+        <div class="col-6">
+          <label class="lbl">First name <span class="req">*</span></label>
+          <input type="text" name="first_name" class="inp form-control" placeholder="Adewale" required>
+        </div>
+        <div class="col-6">
+          <label class="lbl">Last name <span class="req">*</span></label>
+          <input type="text" name="last_name" class="inp form-control" placeholder="Taiwo" required>
+        </div>
+      </div>
+
+      <!-- email -->
+      <div class="mb-3">
+        <label class="lbl">Email address <span class="req">*</span></label>
+        <input type="email" name="email" class="inp form-control" placeholder="you@example.com" required>
+      </div>
+
+      <!-- phone -->
+      <div class="mb-3">
+        <label class="lbl">Phone number <span class="req">*</span></label>
+        <input type="tel" name="phone" class="inp form-control" placeholder="080 1234 5678" required>
+      </div>
+
+      <!-- matric — student only -->
+      <div class="mb-3" id="matric-field">
+        <label class="lbl">Matric number <span class="req">*</span></label>
+        <input type="text" name="matric_no" class="inp form-control" placeholder="e.g. CSC/2021/001">
+        <div class="hint">Your UNIOSUN matriculation number</div>
+      </div>
+
+      <!-- id doc — agent only -->
+      <div class="mb-3" id="id-doc-field" style="display:none;">
+        <label class="lbl">Identity document <span class="req">*</span></label>
+        <input type="file" name="id_document" class="inp form-control" accept="image/*,.pdf">
+        <div class="hint">Upload a valid government-issued ID</div>
+      </div>
+
+      <!-- password -->
+      <div class="mb-3">
+        <label class="lbl">Password <span class="req">*</span></label>
+        <div class="pw">
+          <input type="password" name="password" class="inp form-control" id="rpass" placeholder="At least 8 characters" required>
+          <button type="button" class="eye" onclick="tp('rpass',this)">👁</button>
+        </div>
+      </div>
+
+      <!-- confirm -->
+      <div class="mb-3">
+        <label class="lbl">Confirm password <span class="req">*</span></label>
+        <div class="pw">
+          <input type="password" name="confirm" class="inp form-control" id="rconf" placeholder="Repeat your password" required>
+          <button type="button" class="eye" onclick="tp('rconf',this)">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="sub">Create Account</button>
+
+    </form>
+
+    <div class="tn">
+      By registering you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+      HostelSearch does not process payments.
+    </div>
+
+    <div class="sw">
+      Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function selectRole(role) {
+  document.getElementById('role-input').value = role;
+  document.getElementById('role-student').classList.toggle('selected', role === 'student');
+  document.getElementById('role-agent').classList.toggle('selected',   role === 'agent');
+  document.getElementById('matric-field').style.display  = role === 'student' ? 'block' : 'none';
+  document.getElementById('id-doc-field').style.display  = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('role-input').value = role;
+}
+
+function tp(id, btn) {
+  var el = document.getElementById(id);
+  var show = el.type === 'password';
+  el.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Student Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *{box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+    .hs-nav{background:var(--f);height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .nav-right{display:flex;align-items:center;gap:10px;}
+    .nav-uname{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;}
+    .nav-av{width:34px;height:34px;background:var(--a);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;font-family:'DM Serif Display',serif;cursor:pointer;flex-shrink:0;}
+    .mob-toggle{background:none;border:none;color:rgba(255,255,255,0.7);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background 0.18s;}
+    .mob-toggle:hover{background:rgba(255,255,255,0.1);}
+    .dash-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px);}
+    .sidebar{background:var(--f);padding:28px 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+    .sb-user{padding:0 20px 22px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:14px;}
+    .sb-av{width:48px;height:48px;border-radius:12px;background:var(--a);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:#fff;margin-bottom:10px;}
+    .sb-name{color:#fff;font-size:14px;font-weight:600;}
+    .sb-role{color:var(--p);font-size:12px;margin-top:2px;}
+    .sb-nav{padding:0 10px;}
+    .sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,0.62);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:all 0.18s;width:100%;text-align:left;font-family:'DM Sans',sans-serif;border:none;background:none;}
+    .sb-item:hover{background:rgba(255,255,255,0.08);color:#fff;}
+    .sb-item.on{background:var(--a);color:#fff;}
+    .sb-item .ico{font-size:15px;width:18px;flex-shrink:0;}
+    .sb-sep{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:10px;}
+    .mob-sidebar{width:260px !important;background:var(--f) !important;}
+    .mob-sidebar .offcanvas-body{padding:0;}
+    .dash-body{padding:36px;background:var(--bg);}
+    .dash-head{margin-bottom:28px;}
+    .dash-head h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--f);margin-bottom:4px;}
+    .dash-head p{font-size:14px;color:var(--mu);margin:0;}
+    .dash-pane{display:none;}
+    .dash-pane.active{display:block;}
+    .stat{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:20px;transition:border-color 0.18s;}
+    .stat:hover{border-color:var(--p);}
+    .stat.hi{background:var(--a);border-color:var(--a);}
+    .stat-n{font-family:'DM Serif Display',serif;font-size:36px;color:var(--f);line-height:1;}
+    .stat.hi .stat-n{color:#fff;}
+    .stat-l{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--mu);margin-top:5px;}
+    .stat.hi .stat-l{color:rgba(255,255,255,0.8);}
+    .blk{background:var(--s);border:1.5px solid var(--li);border-radius:12px;padding:24px;margin-bottom:20px;}
+    .blk-t{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--f);padding-left:12px;border-left:3px solid var(--a);margin-bottom:18px;display:block;}
+    .hcard{background:var(--s);border:1.5px solid var(--li);border-radius:12px;overflow:hidden;transition:all 0.2s;display:block;color:inherit;}
+    .hcard:hover{border-color:var(--a);box-shadow:0 4px 20px rgba(10,61,31,0.08);transform:translateY(-2px);color:inherit;}
+    .hcard-img{height:145px;position:relative;}
+    .gi1{background:linear-gradient(150deg,#145c30,#2d9e58);}
+    .gi2{background:linear-gradient(150deg,#1e7a42,#4cc375);}
+    .gi3{background:linear-gradient(150deg,#0a3d1f,#1e7a42);}
+    .gi4{background:linear-gradient(150deg,#0a3d1f,#4cc375);}
+    .hcard-body{padding:16px;}
+    .hcard-body h4{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+    .hcard-loc{font-size:12px;color:var(--mu);margin-bottom:10px;}
+    .hcard-ft{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .price{font-family:'DM Serif Display',serif;font-size:16px;color:var(--f);}
+    .price small{font-size:12px;color:var(--mu);font-family:'DM Sans',sans-serif;font-weight:400;}
+    .stars{color:#f59e0b;font-size:13px;display:flex;align-items:center;gap:2px;}
+    .stars span{color:var(--mu);font-size:11px;margin-left:2px;}
+    .tag{background:var(--bg);color:#1e7a42;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--p);display:inline-block;}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--p);color:var(--f);border:1px solid var(--a);}
+    .rev-item{padding:16px 0;border-bottom:1.5px solid var(--li);}
+    .rev-item:last-child{border-bottom:none;}
+    .rev-hostel{font-weight:600;font-size:14px;color:var(--ink);}
+    .rev-meta{font-size:12px;color:var(--mu);margin:3px 0 8px;}
+    .rev-text{font-size:14px;color:var(--mu);line-height:1.7;}
+    .btn-xs{padding:6px 14px;font-size:12px;font-weight:600;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+    .btn-xs-ol{border:1.5px solid var(--li);background:#fff;color:var(--mu);}
+    .btn-xs-ol:hover{border-color:var(--a);color:var(--a);}
+    .btn-xs-del{border:1.5px solid #fca5a5;background:#fee2e2;color:#991b1b;}
+    .btn-xs-del:hover{background:#fecaca;}
+    .hs-lbl{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;}
+    .hs-inp{border:1.5px solid var(--li) !important;border-radius:8px !important;padding:11px 14px !important;font-size:14px !important;color:var(--ink) !important;font-family:'DM Sans',sans-serif !important;background:#fff !important;box-shadow:none !important;transition:border-color 0.18s !important;width:100%;}
+    .hs-inp:focus{border-color:var(--a) !important;box-shadow:0 0 0 3px rgba(45,158,88,0.08) !important;outline:none !important;}
+    .hs-inp::placeholder{color:#a0b8a8;}
+    .hs-inp[readonly]{background:var(--bg) !important;cursor:not-allowed;}
+    .pw-wrap{position:relative;}
+    .pw-wrap .hs-inp{padding-right:44px !important;}
+    .eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mu);font-size:16px;padding:0;transition:color 0.18s;line-height:1;}
+    .eye:hover{color:var(--a);}
+    .hs-save{padding:11px 28px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+    .hs-save:hover{background:#1e7a42;transform:translateY(-1px);}
+    .hs-save:disabled{opacity:0.55;cursor:not-allowed;transform:none !important;}
+    .prof-av-row{display:flex;align-items:center;gap:18px;padding:20px;background:var(--bg);border:1.5px solid var(--li);border-radius:12px;margin-bottom:22px;}
+    .prof-av{width:64px;height:64px;border-radius:16px;background:var(--a);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:28px;color:#fff;flex-shrink:0;}
+    .prof-av-info h3{font-size:16px;font-weight:600;color:var(--f);margin-bottom:2px;}
+    .prof-av-info p{font-size:13px;color:var(--mu);margin:0;}
+    .danger-zone{border:1.5px solid #fca5a5;border-radius:12px;padding:20px;background:#fff;}
+    .danger-zone h4{font-size:14px;font-weight:600;color:#991b1b;margin-bottom:6px;}
+    .danger-zone p{font-size:13px;color:var(--mu);margin-bottom:14px;}
+    .btn-danger-act{padding:10px 20px;background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+    .btn-danger-act:hover{background:#fecaca;}
+    .empty-s{text-align:center;padding:52px 20px;}
+    .empty-s .ei{font-size:40px;margin-bottom:12px;}
+    .empty-s h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--f);margin-bottom:6px;}
+    .empty-s p{font-size:14px;color:var(--mu);margin-bottom:18px;}
+    .empty-link{display:inline-block;padding:10px 22px;background:var(--a);color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background 0.18s;}
+    .empty-link:hover{background:#1e7a42;color:#fff;}
+    .qa-btn{padding:9px 18px;font-size:13px;font-weight:600;border:1.5px solid var(--li);border-radius:8px;background:#fff;color:var(--mu);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;text-decoration:none;display:inline-block;}
+    .qa-btn:hover{border-color:var(--a);color:var(--a);}
+    .alert-ok{color:#166534;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#dcfce7;border-radius:8px;}
+    .alert-err{color:#dc2626;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#fee2e2;border-radius:8px;}
+    @media(max-width:991px){.dash-layout{grid-template-columns:1fr;}.sidebar{display:none;}.dash-body{padding:20px;}}
+    @media(max-width:576px){.dash-body{padding:14px;}.nav-uname{display:none;}}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="hs-nav">
+  <div class="d-flex align-items-center gap-3">
+    <button class="mob-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobSidebar">☰</button>
+    <a href="{% url 'student_dashboard' %}" class="logo">
+      <div class="dot">🏠</div>
+      <span class="d-none d-sm-inline">HostelSearch</span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-uname">{{ student.user.first_name }} {{ student.user.last_name }}</span>
+    <div class="nav-av" title="My account">{{ student.user.first_name|slice:":1" }}</div>
+  </div>
+</nav>
+
+<!-- MOBILE SIDEBAR -->
+<div class="offcanvas offcanvas-start mob-sidebar" tabindex="-1" id="mobSidebar">
+  <div class="offcanvas-body">
+    <div class="sb-user pt-4">
+      <div class="sb-av">{{ student.user.first_name|slice:":1" }}</div>
+      <div class="sb-name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
+      <div class="sb-role">Student · {{ student.matric_no }}</div>
+    </div>
+    <div class="sb-nav">
+      <button class="sb-item on" onclick="switchPane('overview'); closeMob()"><span class="ico">🏠</span>Dashboard</button>
+      <a href="{% url 'Search' %}" class="sb-item"><span class="ico">🔍</span>Browse Hostels</a>
+      <button class="sb-item" onclick="switchPane('saved'); closeMob()"><span class="ico">❤️</span>Saved Hostels</button>
+      <button class="sb-item" onclick="switchPane('reviews'); closeMob()"><span class="ico">⭐</span>My Reviews</button>
+      <button class="sb-item" onclick="switchPane('profile'); closeMob()"><span class="ico">👤</span>Profile Settings</button>
+      <hr class="sb-sep">
+      <a href="{% url 'logout' %}" class="sb-item"><span class="ico">🚪</span>Logout</a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="dash-layout">
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-user">
+      <div class="sb-av">{{ student.user.first_name|slice:":1" }}</div>
+      <div class="sb-name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
+      <div class="sb-role">Student · {{ student.matric_no }}</div>
+    </div>
+    <nav class="sb-nav">
+      <button class="sb-item on" id="nav-overview" onclick="switchPane('overview')"><span class="ico">🏠</span>Dashboard</button>
+      <a href="{% url 'Search' %}" class="sb-item"><span class="ico">🔍</span>Browse Hostels</a>
+      <button class="sb-item" id="nav-saved" onclick="switchPane('saved')"><span class="ico">❤️</span>Saved Hostels</button>
+      <button class="sb-item" id="nav-reviews" onclick="switchPane('reviews')"><span class="ico">⭐</span>My Reviews</button>
+      <button class="sb-item" id="nav-profile" onclick="switchPane('profile')"><span class="ico">👤</span>Profile Settings</button>
+      <hr class="sb-sep">
+      <a href="{% url 'logout' %}" class="sb-item"><span class="ico">🚪</span>Logout</a>
+    </nav>
+  </aside>
+
+  <!-- DASHBOARD BODY -->
+  <main class="dash-body">
+
+    <!-- Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        {% if 'success' in message.tags %}
+          <div class="alert-ok">{{ message }}</div>
+        {% else %}
+          <div class="alert-err">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <!-- PANE 1 — OVERVIEW -->
+    <div class="dash-pane active" id="pane-overview">
+      <div class="dash-head">
+        <h1>Welcome back, {{ student.user.first_name }} 👋</h1>
+        <p>Here is your accommodation activity on HostelSearch.</p>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-4">
+          <div class="stat hi">
+            <div class="stat-n">{{ saved_count }}</div>
+            <div class="stat-l">Saved Hostels</div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4">
+          <div class="stat">
+            <div class="stat-n">{{ review_count }}</div>
+            <div class="stat-l">Reviews Written</div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4">
+          <div class="stat">
+            <div class="stat-n">0</div>
+            <div class="stat-l">Hostels Viewed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blk">
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="blk-t mb-0">Recently Saved</span>
+          <button class="qa-btn" onclick="switchPane('saved')">View all →</button>
+        </div>
+
+        {% if saved %}
+        <div class="row g-3">
+          {% for item in saved|slice:":3" %}
+          <div class="col-12 col-sm-4">
+            <div class="mini-card" style="background:#fff;border:1.5px solid var(--li);border-radius:10px;overflow:hidden;">
+              <div style="height:90px;position:relative;overflow:hidden;">
+                {% if item.hostel.images.all %}
+                  <img src="{{ item.hostel.images.first.image.url }}"
+                      style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+                      alt="{{ item.hostel.hostel_name }}">
+                {% else %}
+                  <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);position:absolute;top:0;left:0;"></div>
+                {% endif %}
+              </div>
+              <div style="padding:12px;">
+                <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;">{{ item.hostel.hostel_name }}</div>
+                <div style="font-size:11px;color:var(--mu);margin-bottom:8px;">📍 {{ item.hostel.location }}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div style="font-family:'DM Serif Display',serif;font-size:14px;color:var(--f);">₦{{ item.hostel.price_session }}</div>
+                  <a href="{% url 'hostel_detail' item.hostel.pk %}" style="font-size:12px;font-weight:600;color:var(--a);">View →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-s" style="padding:28px 20px;">
+          <div class="ei">❤️</div>
+          <h3>No saved hostels yet</h3>
+          <p>Browse hostels and save the ones you like.</p>
+          <a href="{% url 'Search' %}" class="empty-link">Browse Hostels</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Quick Actions</span>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{% url 'Search' %}" class="qa-btn">🔍 Browse Hostels</a>
+          <button class="qa-btn" onclick="switchPane('reviews')">⭐ My Reviews</button>
+          <button class="qa-btn" onclick="switchPane('profile')">👤 Edit Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 2 — SAVED HOSTELS -->
+<div class="dash-pane" id="pane-saved">
+  <div class="dash-head">
+    <h1>Saved Hostels</h1>
+    <p>Hostels you have bookmarked for later.</p>
+  </div>
+
+  {% if saved %}
+  <div class="row g-3">
+    {% for item in saved %}
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="hcard">
+        <div class="hcard-img" style="position:relative;overflow:hidden;height:145px;">
+          {% if item.hostel.images.all %}
+            <img src="{{ item.hostel.images.first.image.url }}"
+                 style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+                 alt="{{ item.hostel.hostel_name }}">
+          {% else %}
+            <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);position:absolute;top:0;left:0;"></div>
+          {% endif %}
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;justify-content:space-between;align-items:flex-end;">
+            <span class="chip">✓ Verified</span>
+            <a href="{% url 'toggle_save' item.hostel.pk %}" class="save-btn" title="Remove from saved">❤️</a>
+          </div>
+        </div>
+        <div class="hcard-body">
+          <div class="hcard-name">{{ item.hostel.hostel_name }}</div>
+          <div class="hcard-loc">📍 {{ item.hostel.location }}</div>
+          <div class="hcard-ft">
+            <div class="price">₦{{ item.hostel.price_session }} <small>/session</small></div>
+          </div>
+          <a href="{% url 'hostel_detail' item.hostel.pk %}" class="view-btn">View Details</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-s">
+    <div class="ei">❤️</div>
+    <h3>No saved hostels yet</h3>
+    <p>Browse hostels and click the heart icon to save them here.</p>
+    <a href="{% url 'Search' %}" class="empty-link">Browse Hostels</a>
+  </div>
+  {% endif %}
+
+</div><!-- /pane-saved -->
+
+    <!-- PANE 3 — MY REVIEWS -->
+    <div class="dash-pane" id="pane-reviews">
+      <div class="dash-head">
+        <h1>My Reviews</h1>
+        <p>Reviews you have written for hostels you have stayed in.</p>
+      </div>
+      <div class="blk">
+        <span class="blk-t">Written Reviews · {{ review_count }}</span>
+        {% for review in reviews %}
+        <div class="rev-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="rev-hostel">{{ review.hostel.hostel_name }}</div>
+            <div class="stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="rev-meta">📍 {{ review.hostel.location }} · Posted {{ review.created_at|date:"F Y" }}</div>
+          <div class="rev-text">"{{ review.comment }}"</div>
+        </div>
+        {% empty %}
+        <div class="empty-s" style="padding:28px 0;">
+          <div class="ei">⭐</div>
+          <h3>No reviews yet</h3>
+          <p>You have not written any reviews yet.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PANE 4 — PROFILE SETTINGS -->
+    <div class="dash-pane" id="pane-profile">
+      <div class="dash-head">
+        <h1>Profile Settings</h1>
+        <p>Your account information.</p>
+      </div>
+
+      <div class="prof-av-row">
+        <div class="prof-av">{{ student.user.first_name|slice:":1" }}</div>
+        <div class="prof-av-info">
+          <h3>{{ student.user.first_name }} {{ student.user.last_name }}</h3>
+          <p>Student · {{ student.matric_no }} · UNIOSUN</p>
+        </div>
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Personal Information</span>
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">First name</label>
+            <input type="text" class="hs-inp form-control" value="{{ student.user.first_name }}" readonly>
+          </div>
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">Last name</label>
+            <input type="text" class="hs-inp form-control" value="{{ student.user.last_name }}" readonly>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="hs-lbl">Email address</label>
+          <input type="email" class="hs-inp form-control" value="{{ student.user.email }}" readonly>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">Phone number</label>
+            <input type="tel" class="hs-inp form-control" value="{{ student.phone }}" readonly>
+          </div>
+          <div class="col-12 col-sm-6">
+            <label class="hs-lbl">Matric number</label>
+            <input type="text" class="hs-inp form-control" value="{{ student.matric_no }}" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Change Password</span>
+        <form onsubmit="changePass(event)">
+          <div class="mb-3">
+            <label class="hs-lbl">Current password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-old" placeholder="Enter current password">
+              <button type="button" class="eye" onclick="showPass('p-old',this)">👁</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">New password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-new" placeholder="At least 8 characters">
+              <button type="button" class="eye" onclick="showPass('p-new',this)">👁</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="hs-lbl">Confirm new password</label>
+            <div class="pw-wrap">
+              <input type="password" class="hs-inp form-control" id="p-conf" placeholder="Repeat new password">
+              <button type="button" class="eye" onclick="showPass('p-conf',this)">👁</button>
+            </div>
+          </div>
+          <button type="submit" class="hs-save" id="pass-btn">Update Password</button>
+        </form>
+      </div>
+
+      <div class="danger-zone">
+        <h4>Delete Account</h4>
+        <p>Once deleted, all your data is permanently removed. This cannot be undone.</p>
+        <button class="btn-danger-act" onclick="delAccount()">Delete My Account</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  window.switchPane = function(name){
+    document.querySelectorAll('.dash-pane').forEach(function(p){p.classList.remove('active');});
+    document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('on');});
+    var pane=document.getElementById('pane-'+name);
+    var btn=document.getElementById('nav-'+name);
+    if(pane)pane.classList.add('active');
+    if(btn)btn.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  window.delRev=function(btn){
+    if(!confirm('Delete this review?'))return;
+    var item=btn.closest('.rev-item');
+    if(!item)return;
+    item.style.transition='opacity .3s';
+    item.style.opacity='0';
+    setTimeout(function(){item.remove();},300);
+  };
+
+  window.editRev=function(btn){
+    var item=btn.closest('.rev-item');
+    var textEl=item.querySelector('.rev-text');
+    var current=textEl.textContent.replace(/^"|"$/g,'').trim();
+    var newText=prompt('Edit your review:',current);
+    if(newText&&newText.trim()){textEl.textContent='\u201C'+newText.trim()+'\u201D';}
+  };
+
+  window.changePass=function(e){
+    e.preventDefault();
+    var np=document.getElementById('p-new').value;
+    var conf=document.getElementById('p-conf').value;
+    if(!document.getElementById('p-old').value||!np||!conf){alert('Please fill in all password fields.');return;}
+    if(np.length<8){alert('New password must be at least 8 characters.');return;}
+    if(np!==conf){alert('Passwords do not match.');return;}
+    var btn=document.getElementById('pass-btn');
+    btn.textContent='Updating\u2026';
+    btn.disabled=true;
+    setTimeout(function(){
+      btn.textContent='Updated \u2713';
+      ['p-old','p-new','p-conf'].forEach(function(id){document.getElementById(id).value='';});
+      setTimeout(function(){btn.textContent='Update Password';btn.disabled=false;},2000);
+    },1000);
+  };
+
+  window.delAccount=function(){
+    if(confirm('Are you sure? All your data will be permanently deleted.')){
+      window.location.href="{% url 'logout' %}";
+    }
+  };
+
+  window.showPass=function(id,btn){
+    var el=document.getElementById(id);
+    var show=el.type==='password';
+    el.type=show?'text':'password';
+    btn.textContent=show?'\uD83D\uDE48':'\uD83D\uDC41';
+  };
+
+  window.closeMob=function(){
+    var el=document.getElementById('mobSidebar');
+    var oc=bootstrap.Offcanvas.getInstance(el);
+    if(oc)oc.hide();
+  };
+})();
+</script>
+
+</body>
+</html>

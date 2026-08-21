@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HostelSearch — Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--f:#0a3d1f;--a:#2d9e58;--p:#c8f0d6;--bg:#edfaf2;--s:#fff;--ink:#1a2e22;--mu:#5a7060;--li:#ddeee4;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+    a{text-decoration:none;color:inherit;}
+
+    /* navbar */
+    .nav{background:var(--f);height:60px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{font-family:'DM Serif Display',serif;font-size:20px;color:#fff;display:flex;align-items:center;gap:10px;}
+    .logo .dot{width:28px;height:28px;background:var(--a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+    /* page */
+    .page{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 60px);}
+
+    /* left panel */
+    .left{background:var(--f);padding:60px 52px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+    .left::after{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(45,158,88,.18) 0%,transparent 70%);}
+    .ey{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#4cc375;padding-left:12px;border-left:3px solid var(--a);margin-bottom:18px;display:block;}
+    .left h2{font-family:'DM Serif Display',serif;color:#fff;font-size:34px;line-height:1.1;margin-bottom:16px;}
+    .left h2 em{color:#4cc375;font-style:normal;}
+    .left p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.8;margin-bottom:30px;}
+    .tp{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+    .td{width:7px;height:7px;border-radius:50%;background:var(--a);flex-shrink:0;margin-top:7px;}
+    .tp p{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6;margin:0;}
+    .tp p strong{color:#fff;}
+
+    /* right panel */
+    .right{background:#fff;padding:56px 52px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;}
+
+    /* form */
+    .fh{margin-bottom:24px;}
+    .fh h1{font-family:'DM Serif Display',serif;font-size:28px;color:var(--f);margin-bottom:4px;}
+    .fh p{font-size:14px;color:var(--mu);}
+    .lbl{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;}
+    .inp{border:1.5px solid var(--li)!important;border-radius:8px!important;padding:11px 14px!important;font-size:14px!important;color:var(--ink)!important;font-family:'DM Sans',sans-serif!important;background:#fff!important;box-shadow:none!important;transition:border-color .18s!important;width:100%;}
+    .inp:focus{border-color:var(--a)!important;box-shadow:0 0 0 3px rgba(45,158,88,.08)!important;outline:none!important;}
+    .inp::placeholder{color:#a0b8a8;}
+    .pw{position:relative;}
+    .pw .inp{padding-right:44px!important;}
+    .eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mu);font-size:16px;padding:0;line-height:1;}
+    .eye:hover{color:var(--a);}
+    .forgot{font-size:12px;color:var(--a);font-weight:500;}
+    .forgot:hover{color:#1e7a42;}
+    .sub{width:100%;padding:13px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:16px;transition:all .2s;}
+    .sub:hover{background:#1e7a42;transform:translateY(-1px);}
+    .sw{text-align:center;font-size:13px;color:var(--mu);margin-top:12px;}
+    .sw a{color:var(--a);font-weight:600;}
+    .sw a:hover{color:#1e7a42;}
+    .alert-err{color:#dc2626;font-size:13px;margin-bottom:14px;padding:10px 14px;background:#fee2e2;border-radius:8px;}
+
+    @media(max-width:768px){
+      .nav{padding:0 20px;}
+      .page{grid-template-columns:1fr;}
+      .left{display:none;}
+      .right{padding:36px 24px;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="{% url 'home' %}" class="logo">
+    <div class="dot">🏠</div>
+    HostelSearch
+  </a>
+  <a href="{% url 'register' %}" style="color:rgba(255,255,255,.7);font-size:13px;font-weight:500;">Create Account</a>
+</nav>
+
+<div class="page">
+
+  <!-- left brand panel -->
+  <div class="left">
+    <span class="ey">UNIOSUN Off-Campus Accommodation</span>
+    <h2>Your hostel search<br>starts <em>here.</em></h2>
+    <p>Browse verified off-campus hostels near Osun State University. No fake agents. No wasted trips.</p>
+    <div class="tp"><div class="td"></div><p><strong>Admin-verified listings</strong> — every hostel is reviewed before students can see it.</p></div>
+    <div class="tp"><div class="td"></div><p><strong>Verified agents only</strong> — all agents provide ID before listing.</p></div>
+    <div class="tp"><div class="td"></div><p><strong>Real photos and honest reviews</strong> — see the hostel before you visit.</p></div>
+  </div>
+
+  <!-- right form panel -->
+  <div class="right">
+
+    <div class="fh">
+      <h1>Welcome back</h1>
+      <p>Login to access your HostelSearch account.</p>
+    </div>
+
+    <!-- error messages from Django -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-err">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="lbl">Email address</label>
+        <input type="email" name="email" class="inp form-control" placeholder="you@example.com" required>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <label class="lbl mb-0">Password</label>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+        <div class="pw">
+          <input type="password" name="password" class="inp form-control" id="lpass" placeholder="Enter your password" required>
+          <button type="button" class="eye" onclick="tp('lpass',this)">👁</button>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <input type="checkbox" id="rem" style="accent-color:var(--a);width:15px;height:15px;">
+        <label for="rem" style="font-size:13px;color:var(--mu);margin:0;cursor:pointer;">Keep me logged in</label>
+      </div>
+
+      <button type="submit" class="sub">Login to HostelSearch</button>
+
+    </form>
+
+    <div class="sw">
+      Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function tp(id, btn) {
+  var el = document.getElementById(id);
+  var show = el.type === 'password';
+  el.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+
+<div class="col-lg-3 col-md-4 col-sm-6 col-12 gy-5">
+
+    <a href="#">
+
+        <div style="width: 100%; min-height: 450px; height: auto; background-color: #10562a; border-radius: 12px; position: relative; overflow: hidden; border: 3px solid rgb(63, 159, 63)">
+
+            <img src="{% static image %}"
+                 class="img-fluid"
+                 class="rooms"
+                 style="height: 250px; width: 100%; object-fit: cover;"
+                 alt="Hostel">
+
+            <p style="position: absolute; background-color: white; color: #10562a; padding: 5px; border-radius: 18px; top: 45%; left: 5%;">
+                Verified
+            </p>
+
+            <div style="background-color: white; width: 100%; min-height: 200px; height: auto; position: absolute; top: 55%; padding: 20px; padding-top: 8px; color: black;">
+
+                <h2 id="h2" style="font-size: 25px;">
+                    {{ name }}
+                </h2>
+
+                <p style="margin: 0;">
+                    {{ location }}
+                </p>
+
+                <div style="display: flex; gap: 10px; font-size: 12px; font-weight: 500; flex-wrap: wrap;">
+
+                    <p class="px-2" style="background-color: #56f791; border-radius: 40px; padding: 3px;">
+                        {{ feature1 }}
+                    </p>
+
+                    <p class="px-2" style="background-color: #56f791; border-radius: 40px; padding: 3px;">
+                        {{ feature2 }}
+                    </p>
+
+                    <p class="px-2" style="background-color: #56f791; border-radius: 40px; padding: 3px;">
+                        {{ feature3 }}
+                    </p>
+
+                </div>
+
+                <div style="display: flex; justify-content: space-between;">
+
+                    <p style="margin: 0; font-size: 20px;">
+                        {{ price }}
+                        <span style="font-size: 15px;">/session</span>
+                    </p>
+
+                    <div>
+                        ⭐ (12)
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </a>
+
+</div>
