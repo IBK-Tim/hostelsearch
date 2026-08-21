@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "gunicorn HostelSearch.wsgi",
+    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn HostelSearch.wsgi",
     "restartPolicyType": "ON_FAILURE"
   }
 }
