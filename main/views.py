@@ -69,11 +69,12 @@ def register(request):
                 last_name  = last,
             )
             Agent.objects.create(
-                user        = user,
-                phone       = phone,
-                passport    = request.FILES.get('passport'),
-                id_document = request.FILES.get('id_document'),
-                is_verified = False,
+                user          = user,
+                phone         = phone,
+                business_name = request.POST.get('business_name', '').strip(),
+                passport      = request.FILES.get('passport'),
+                id_document   = request.FILES.get('id_document'),
+                is_verified   = False,
             )
             messages.success(request,
                 'Agent account submitted successfully. '

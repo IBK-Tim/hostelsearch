@@ -159,6 +159,13 @@
       </div>
 
       <!-- id doc — agent only -->
+      <!-- Business name — agent only -->
+    <div class="mb-3" id="business-name-field" style="display:none;">
+      <label class="lbl">Agent Business Name <span class="req">*</span></label>
+      <input type="text" name="business_name" class="inp form-control"
+            placeholder="e.g. Adeleke Properties, Sunshine Hostels">
+      <div class="hint">The name your clients know you by</div>
+    </div>
       <!-- Passport photograph — agent only -->
     <div class="mb-3" id="passport-field" style="display:none;">
       <label class="lbl">Passport Photograph <span class="req">*</span></label>
@@ -214,9 +221,10 @@ function selectRole(role) {
   document.getElementById('role-input').value = role;
   document.getElementById('role-student').classList.toggle('selected', role === 'student');
   document.getElementById('role-agent').classList.toggle('selected', role === 'agent');
-  document.getElementById('matric-field').style.display   = role === 'student' ? 'block' : 'none';
-  document.getElementById('passport-field').style.display = role === 'agent'   ? 'block' : 'none';
-  document.getElementById('id-doc-field').style.display   = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('matric-field').style.display        = role === 'student' ? 'block' : 'none';
+  document.getElementById('business-name-field').style.display = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('passport-field').style.display      = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('id-doc-field').style.display        = role === 'agent'   ? 'block' : 'none';
 }
 
 function tp(id, btn) {

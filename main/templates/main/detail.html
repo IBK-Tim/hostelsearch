@@ -325,9 +325,9 @@
         <div class="ccs">per session · {{ hostel.hostel_type }}</div>
 
         <div class="agr">
-          <div class="agav">{{ hostel.agent.user.first_name|slice:":1" }}</div>
+          <div class="agav">{{ hostel.agent.business_name|slice:":1"|default:hostel.agent.user.first_name|slice:":1" }}</div>
           <div>
-            <div class="agn">{{ hostel.agent.user.first_name }} {{ hostel.agent.user.last_name }}</div>
+            <div class="agn">{{ hostel.agent.business_name|default:hostel.agent.user.get_full_name }}</div>
             <div class="ags"><span class="chip" style="font-size:10px;">✓ Verified Agent</span></div>
           </div>
         </div>

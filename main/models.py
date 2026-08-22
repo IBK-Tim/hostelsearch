@@ -16,6 +16,7 @@ class Student(models.Model):
 class Agent(models.Model):
     user        = models.OneToOneField(User, on_delete=models.CASCADE)
     phone       = models.CharField(max_length=20)
+    business_name = models.CharField(max_length=200, blank=True)
     passport    = CloudinaryField('passport', blank=True, null=True)
     id_document = CloudinaryField('id_document (NIN)', blank=True, null=True)
     is_verified = models.BooleanField(default=False)

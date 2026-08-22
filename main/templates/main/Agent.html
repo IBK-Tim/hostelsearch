@@ -137,8 +137,8 @@
     </a>
   </div>
   <div class="nav-right">
-    <span class="nav-uname">{{ agent.user.first_name }} {{ agent.user.last_name }}</span>
-    <div class="nav-av" title="My account">{{ agent.user.first_name|slice:":1" }}</div>
+    <span class="nav-uname">{{ agent.business_name|default:agent.user.first_name }}</span>
+    <div class="nav-av">{{ agent.business_name|slice:":1"|default:agent.user.first_name|slice:":1" }}</div>
   </div>
 </nav>
 
@@ -147,7 +147,7 @@
   <div class="offcanvas-body">
     <div class="sb-user pt-4">
       <div class="sb-av">{{ agent.user.first_name|slice:":1" }}</div>
-      <div class="sb-name">{{ agent.user.first_name }} {{ agent.user.last_name }}</div>
+      <div class="sb-name">{{ agent.business_name|default:agent.user.get_full_name }}</div>
       <div class="sb-role">Hostel Agent</div>
       <div class="sb-badge">✓ Verified Agent</div>
     </div>
@@ -488,6 +488,12 @@
           <h3>{{ agent.user.first_name }} {{ agent.user.last_name }}</h3>
           <p>Hostel Agent · <span style="color:var(--a);font-weight:600;">✓ Verified</span></p>
         </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="hs-lbl">Business Name</label>
+        <input type="text" class="hs-inp form-control" 
+              value="{{ agent.business_name }}" readonly>
       </div>
 
       <div class="blk">
