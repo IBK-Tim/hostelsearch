@@ -624,14 +624,14 @@
 
   {% for hostel in featured %}
   <div class="hcard">
-    <div class="hcard-img" style="position:relative;overflow:hidden;">
-      {% if hostel.images.all %}
-        <img src="{{ hostel.images.first.image.url }}"
-            style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
-            alt="{{ hostel.hostel_name }}">
-      {% else %}
-        <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);"></div>
-      {% endif %}
+    <div class="hcard-img" style="position:relative;overflow:hidden;height:180px;">
+    {% if hostel.images.all %}
+      <img src="{{ hostel.images.first.image.url }}"
+          style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+          alt="{{ hostel.hostel_name }}">
+    {% else %}
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);position:absolute;top:0;left:0;"></div>
+    {% endif %}
       <span class="chip">✓ Verified</span>
     </div>
     <div class="hcard-body">
