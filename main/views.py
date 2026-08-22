@@ -71,6 +71,7 @@ def register(request):
             Agent.objects.create(
                 user        = user,
                 phone       = phone,
+                passport    = request.FILES.get('passport'),
                 id_document = request.FILES.get('id_document'),
                 is_verified = False,
             )

@@ -159,11 +159,21 @@
       </div>
 
       <!-- id doc — agent only -->
-      <div class="mb-3" id="id-doc-field" style="display:none;">
-        <label class="lbl">Identity document <span class="req">*</span></label>
-        <input type="file" name="id_document" class="inp form-control" accept="image/*,.pdf">
-        <div class="hint">Upload a valid government-issued ID</div>
-      </div>
+      <!-- Passport photograph — agent only -->
+    <div class="mb-3" id="passport-field" style="display:none;">
+      <label class="lbl">Passport Photograph <span class="req">*</span></label>
+      <input type="file" name="passport" class="inp form-control"
+            id="reg-passport" accept="image/*">
+      <div class="hint">Upload a clear passport photograph</div>
+    </div>
+
+    <!-- NIN document — agent only -->
+    <div class="mb-3" id="id-doc-field" style="display:none;">
+      <label class="lbl">NIN Document <span class="req">*</span></label>
+      <input type="file" name="id_document" class="inp form-control"
+            id="reg-id-doc" accept="image/*,.pdf">
+      <div class="hint">Upload your National Identification Number (NIN) slip or card</div>
+    </div>
 
       <!-- password -->
       <div class="mb-3">
@@ -203,10 +213,10 @@
 function selectRole(role) {
   document.getElementById('role-input').value = role;
   document.getElementById('role-student').classList.toggle('selected', role === 'student');
-  document.getElementById('role-agent').classList.toggle('selected',   role === 'agent');
-  document.getElementById('matric-field').style.display  = role === 'student' ? 'block' : 'none';
-  document.getElementById('id-doc-field').style.display  = role === 'agent'   ? 'block' : 'none';
-  document.getElementById('role-input').value = role;
+  document.getElementById('role-agent').classList.toggle('selected', role === 'agent');
+  document.getElementById('matric-field').style.display   = role === 'student' ? 'block' : 'none';
+  document.getElementById('passport-field').style.display = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('id-doc-field').style.display   = role === 'agent'   ? 'block' : 'none';
 }
 
 function tp(id, btn) {

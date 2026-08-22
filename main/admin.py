@@ -8,8 +8,9 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Agent)
 class AgentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'phone', 'is_verified', 'created_at']
-    list_filter  = ['is_verified']
+    list_display  = ['user', 'phone', 'is_verified', 'created_at']
+    list_filter   = ['is_verified']
+    readonly_fields = ['passport', 'id_document']
 
 @admin.register(Hostel)
 class HostelAdmin(admin.ModelAdmin):
