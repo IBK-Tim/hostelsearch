@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import Student, Agent, Hostel, HostelImage, Review, SavedHostel
 
 
@@ -373,4 +375,4 @@ def toggle_availability(request, pk):
     else:
         messages.success(request, f'{hostel.hostel_name} marked as Fully Occupied.')
 
-    return redirect('agent_dashboard')
+    return HttpResponseRedirect(reverse('agent_dashboard') + '#listings')

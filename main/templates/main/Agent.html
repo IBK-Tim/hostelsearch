@@ -196,108 +196,105 @@
         {% endif %}
       {% endfor %}
     {% endif %}
-
+      
     <!-- PANE 1 — OVERVIEW -->
-    <div class="dash-pane active" id="pane-overview">
-      <div class="dash-head">
-        <h1>Welcome, {{ agent.user.first_name }} 👋</h1>
-        <p>Manage your hostel listings and track activity.</p>
+<div class="dash-pane active" id="pane-overview">
+  <div class="dash-head">
+    <h1>Welcome, {{ agent.user.first_name }} 👋</h1>
+    <p>Manage your hostel listings and track activity.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-sm-3">
+      <div class="stat hi">
+        <div class="stat-n">{{ total_listings }}</div>
+        <div class="stat-l">Total Listings</div>
       </div>
-
-      <!-- Stats -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-sm-3">
-          <div class="stat hi">
-            <div class="stat-n">{{ total_listings }}</div>
-            <div class="stat-l">Total Listings</div>
-          </div>
-        </div>
-        <div class="col-6 col-sm-3">
-          <div class="stat">
-            <div class="stat-n">{{ approved_count }}</div>
-            <div class="stat-l">Approved</div>
-          </div>
-        </div>
-        <div class="col-6 col-sm-3">
-          <div class="stat stat-amber">
-            <div class="stat-n">{{ pending_count }}</div>
-            <div class="stat-l">Pending Review</div>
-          </div>
-        </div>
-        <div class="col-6 col-sm-3">
-          <div class="stat">
-            <div class="stat-n">0</div>
-            <div class="stat-l">Total Views</div>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="stat">
+        <div class="stat-n">{{ approved_count }}</div>
+        <div class="stat-l">Approved</div>
       </div>
-
-      <!-- Pending notice — only show if there are pending listings -->
-      {% if pending_count > 0 %}
-      <div class="pending-notice">
-        <span style="font-size:18px;">⏳</span>
-        <span>You have <strong>{{ pending_count }} listing{{ pending_count|pluralize }}</strong> currently pending admin review. You will be notified once approved.</span>
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="stat stat-amber">
+        <div class="stat-n">{{ pending_count }}</div>
+        <div class="stat-l">Pending Review</div>
       </div>
-      {% endif %}
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="stat">
+        <div class="stat-n">0</div>
+        <div class="stat-l">Total Views</div>
+      </div>
+    </div>
+  </div>
 
-      <!-- Recent listings mini preview -->
-      <div class="blk">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="blk-t mb-0">My Listings</span>
-          <button class="qa-btn" onclick="switchPane('listings')">View all →</button>
-        </div>
+  {% if pending_count > 0 %}
+  <div class="pending-notice">
+    <span style="font-size:18px;">⏳</span>
+    <span>You have <strong>{{ pending_count }} listing{{ pending_count|pluralize }}</strong> currently pending admin review.</span>
+  </div>
+  {% endif %}
 
-        {% if listings %}
-        <div class="row g-3">
-          {% for listing in listings|slice:":3" %}
-          <div class="col-12 col-sm-4">
-            <div class="mini-card">
-              <div class="mini-img" style="position:relative;overflow:hidden;">
-                {% if listing.images.all %}
-                  <img src="{{ listing.images.first.image.url }}"
-                       style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
-                       alt="{{ listing.hostel_name }}">
+  <div class="blk">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="blk-t mb-0">My Listings</span>
+      <button class="qa-btn" onclick="switchPane('listings')">View all →</button>
+    </div>
+    {% if listings %}
+    <div class="row g-3">
+      {% for listing in listings|slice:":3" %}
+      <div class="col-12 col-sm-4">
+        <a href="{% if listing.status == 'approved' %}{% url 'hostel_detail' listing.pk %}{% else %}#{% endif %}" style="text-decoration:none;color:inherit;">
+          <div class="mini-card">
+            <div class="mini-img" style="position:relative;overflow:hidden;">
+              {% if listing.images.all %}
+                <img src="{{ listing.images.first.image.url }}"
+                     style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;"
+                     alt="{{ listing.hostel_name }}">
+              {% else %}
+                <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);"></div>
+              {% endif %}
+            </div>
+            <div class="mini-body">
+              <div class="mini-name">{{ listing.hostel_name }}</div>
+              <div class="mini-loc">📍 {{ listing.location }}</div>
+              <div class="mini-ft">
+                <div class="mini-price">₦{{ listing.price_session }}</div>
+                {% if listing.status == 'approved' %}
+                  <span class="chip chip-approved">✓ Approved</span>
+                {% elif listing.status == 'pending' %}
+                  <span class="chip chip-pending">⏳ Pending</span>
                 {% else %}
-                  <div style="width:100%;height:100%;background:linear-gradient(145deg,#145c30,#2d9e58);"></div>
+                  <span class="chip chip-rejected">✗ Rejected</span>
                 {% endif %}
-              </div>
-              <div class="mini-body">
-                <div class="mini-name">{{ listing.hostel_name }}</div>
-                <div class="mini-loc">📍 {{ listing.location }}</div>
-                <div class="mini-ft">
-                  <div class="mini-price">₦{{ listing.price_session }}</div>
-                  {% if listing.status == 'approved' %}
-                    <span class="chip chip-approved">✓ Approved</span>
-                  {% elif listing.status == 'pending' %}
-                    <span class="chip chip-pending">⏳ Pending</span>
-                  {% else %}
-                    <span class="chip chip-rejected">✗ Rejected</span>
-                  {% endif %}
-                </div>
               </div>
             </div>
           </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-s">
-          <div class="ei">🏠</div>
-          <h3>No listings yet</h3>
-          <p>Add your first hostel listing to get started.</p>
-        </div>
-        {% endif %}
+        </a>
       </div>
-
-      <!-- Quick actions -->
-      <div class="blk">
-        <span class="blk-t">Quick Actions</span>
-        <div class="d-flex flex-wrap gap-2">
-          <button class="qa-btn" onclick="switchPane('add')">➕ Add New Listing</button>
-          <button class="qa-btn" onclick="switchPane('listings')">🏠 View All Listings</button>
-          <button class="qa-btn" onclick="switchPane('profile')">👤 Edit Profile</button>
-        </div>
-      </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="empty-s">
+      <div class="ei">🏠</div>
+      <h3>No listings yet</h3>
+      <p>Add your first hostel listing to get started.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="blk">
+    <span class="blk-t">Quick Actions</span>
+    <div class="d-flex flex-wrap gap-2">
+      <button class="qa-btn" onclick="switchPane('add')">➕ Add New Listing</button>
+      <button class="qa-btn" onclick="switchPane('listings')">🏠 View All Listings</button>
+      <button class="qa-btn" onclick="switchPane('profile')">👤 Edit Profile</button>
+    </div>
+  </div>
+</div><!-- /pane-overview -->
 
     <!-- PANE 2 — MY LISTINGS -->
     <div class="dash-pane" id="pane-listings">
@@ -492,41 +489,51 @@
     </div>
 
     <!-- PANE 4 — PROFILE -->
-    <div class="blk">
-      <span class="blk-t">Personal Information</span>
-      <form method="POST" action="{% url 'update_agent_profile' %}">
-        {% csrf_token %}
-        <div class="row g-3 mb-3">
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">First name</label>
-            <input type="text" name="first_name" class="hs-inp form-control" value="{{ agent.user.first_name }}">
+ <!-- PANE 4 — PROFILE -->
+    <div class="dash-pane" id="pane-profile">
+      <div class="dash-head">
+        <h1>Profile Settings</h1>
+        <p>Your agent account information.</p>
+      </div>
+
+      <div class="prof-av-row">
+        <div class="prof-av">{{ agent.user.first_name|slice:":1" }}</div>
+        <div class="prof-av-info">
+          <h3>{{ agent.user.first_name }} {{ agent.user.last_name }}</h3>
+          <p>Hostel Agent · <span style="color:var(--a);font-weight:600;">✓ Verified</span></p>
+        </div>
+      </div>
+
+      <div class="blk">
+        <span class="blk-t">Personal Information</span>
+        <form method="POST" action="{% url 'update_agent_profile' %}">
+          {% csrf_token %}
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">First name</label>
+              <input type="text" name="first_name" class="hs-inp form-control" value="{{ agent.user.first_name }}">
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Last name</label>
+              <input type="text" name="last_name" class="hs-inp form-control" value="{{ agent.user.last_name }}">
+            </div>
           </div>
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">Last name</label>
-            <input type="text" name="last_name" class="hs-inp form-control" value="{{ agent.user.last_name }}">
+          <div class="mb-3">
+            <label class="hs-lbl">Business Name</label>
+            <input type="text" name="business_name" class="hs-inp form-control" value="{{ agent.business_name }}">
           </div>
-        </div>
-        <div class="mb-3">
-          <label class="hs-lbl">Business Name</label>
-          <input type="text" name="business_name" class="hs-inp form-control" value="{{ agent.business_name }}">
-        </div>
-        <div class="mb-3">
-          <label class="hs-lbl">Email address</label>
-          <input type="email" name="email" class="hs-inp form-control" value="{{ agent.user.email }}">
-        </div>
-        <div class="mb-3">
-          <label class="hs-lbl">Phone number</label>
-          <input type="tel" name="phone" class="hs-inp form-control" value="{{ agent.phone }}">
-        </div>
-        <div class="mb-3">
-          <label class="hs-lbl">ID Document</label>
-          <div style="padding:12px 14px;background:var(--bg);border:1.5px solid var(--li);border-radius:8px;font-size:13px;color:var(--mu);">
-            ✓ Identity document verified by admin
+          <div class="mb-3">
+            <label class="hs-lbl">Email address</label>
+            <input type="email" name="email" class="hs-inp form-control" value="{{ agent.user.email }}">
           </div>
-        </div>
-        <button type="submit" class="hs-save">Save Changes</button>
-      </form>
-    </div>
+          <div class="mb-3">
+            <label class="hs-lbl">Phone number</label>
+            <input type="tel" name="phone" class="hs-inp form-control" value="{{ agent.phone }}">
+          </div>
+          <button type="submit" class="hs-save">Save Changes</button>
+        </form>
+      </div>
+
       <div class="blk">
         <span class="blk-t">Change Password</span>
         <form onsubmit="changePass(event)">
@@ -560,7 +567,7 @@
         <p>Deleting your account will permanently remove all your listings and data. This cannot be undone.</p>
         <button class="btn-danger" onclick="delAccount()">Delete My Account</button>
       </div>
-    </div>
+    </div><!-- /pane-profile -->
 
   </main>
 </div>
@@ -579,6 +586,15 @@
     if(btn)btn.classList.add('on');
     window.scrollTo({top:0,behavior:'smooth'});
   };
+
+  // check URL hash on page load and switch to correct pane
+window.addEventListener('load', function() {
+        var hash = window.location.hash;
+        if (hash === '#listings') switchPane('listings');
+        else if (hash === '#add') switchPane('add');
+        else if (hash === '#profile') switchPane('profile');
+    });
+
 
   window.deleteListing = function(btn, pk){
     if(!confirm('Delete this listing? This cannot be undone.')) return;
