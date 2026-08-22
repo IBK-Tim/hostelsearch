@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Student, Agent, Hostel, Review
+from django.utils.html import format_html
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -8,9 +9,25 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Agent)
 class AgentAdmin(admin.ModelAdmin):
-    list_display  = ['user', 'phone', 'is_verified', 'created_at']
+    list_display  = ['user', 'business_name', 'phone', 'is_verified', 'created_at']
     list_filter   = ['is_verified']
-    readonly_fields = ['passport', 'id_document']
+
+    def passport_preview(self, obj):
+        if obj.passport:
+            url = obj.passport.url
+            return format_html('<a href="{}" target="_blank"><img src="{}" width="100" height="100" style="object-fit:cover;border-radius:8px;"/></a>', url, url)
+        return 'No passport uploaded'
+    passport_preview.short_description = 'Passport'
+
+    def nin_preview(self, obj):
+        if obj.id_document:
+            url = obj.id_document.url
+            return format_html('<a href="{}" target="_blank"><img src="{}" width="200" style="border-radius:8px;"/></a>', url, url)
+        return 'No NIN uploaded'
+    nin_preview.short_description = 'NIN Document'
+
+    readonly_fields = ['passport_preview', 'nin_preview']
+    fields = ['user', 'phone', 'business_name', 'is_verified', 'passport_preview', 'nin_preview']
 
 @admin.register(Hostel)
 class HostelAdmin(admin.ModelAdmin):
