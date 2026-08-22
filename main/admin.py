@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Agent, Hostel, Review
+from .models import Student, Agent, Hostel, HostelImage, Review, SavedHostel
 from django.utils.html import format_html
 
 @admin.register(Student)
@@ -38,3 +38,11 @@ class HostelAdmin(admin.ModelAdmin):
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['student', 'hostel', 'rating', 'created_at']
+
+@admin.register(HostelImage)
+class HostelImageAdmin(admin.ModelAdmin):
+    list_display = ['hostel', 'uploaded_at']
+
+@admin.register(SavedHostel)
+class SavedHostelAdmin(admin.ModelAdmin):
+    list_display = ['student', 'hostel', 'saved_at']
