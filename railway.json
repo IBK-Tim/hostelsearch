@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && python manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin').exists() or User.objects.create_superuser('hostelsearch', 'ibukunanifowose05@gmail.com', 'hostelsearch@1234')\" && gunicorn HostelSearch.wsgi",
+    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && python manage.py shell -c \"from django.contrib.auth.models import User; User.objects.filter(username='admin').exists() or User.objects.create_superuser('hostelsearch', 'ibukunanifowose@gmail.com', 'hostelsearch@1234')\" && gunicorn HostelSearch.wsgi",
     "restartPolicyType": "ON_FAILURE"
   }
 }
