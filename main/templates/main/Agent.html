@@ -476,45 +476,31 @@
     </div>
 
     <!-- PANE 4 — PROFILE -->
-    <div class="dash-pane" id="pane-profile">
-      <div class="dash-head">
-        <h1>Profile Settings</h1>
-        <p>Your agent account information.</p>
-      </div>
-
-      <div class="prof-av-row">
-        <div class="prof-av">{{ agent.user.first_name|slice:":1" }}</div>
-        <div class="prof-av-info">
-          <h3>{{ agent.user.first_name }} {{ agent.user.last_name }}</h3>
-          <p>Hostel Agent · <span style="color:var(--a);font-weight:600;">✓ Verified</span></p>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label class="hs-lbl">Business Name</label>
-        <input type="text" class="hs-inp form-control" 
-              value="{{ agent.business_name }}" readonly>
-      </div>
-
-      <div class="blk">
-        <span class="blk-t">Personal Information</span>
+    <div class="blk">
+      <span class="blk-t">Personal Information</span>
+      <form method="POST" action="{% url 'update_agent_profile' %}">
+        {% csrf_token %}
         <div class="row g-3 mb-3">
           <div class="col-12 col-sm-6">
             <label class="hs-lbl">First name</label>
-            <input type="text" class="hs-inp form-control" value="{{ agent.user.first_name }}" readonly>
+            <input type="text" name="first_name" class="hs-inp form-control" value="{{ agent.user.first_name }}">
           </div>
           <div class="col-12 col-sm-6">
             <label class="hs-lbl">Last name</label>
-            <input type="text" class="hs-inp form-control" value="{{ agent.user.last_name }}" readonly>
+            <input type="text" name="last_name" class="hs-inp form-control" value="{{ agent.user.last_name }}">
           </div>
         </div>
         <div class="mb-3">
+          <label class="hs-lbl">Business Name</label>
+          <input type="text" name="business_name" class="hs-inp form-control" value="{{ agent.business_name }}">
+        </div>
+        <div class="mb-3">
           <label class="hs-lbl">Email address</label>
-          <input type="email" class="hs-inp form-control" value="{{ agent.user.email }}" readonly>
+          <input type="email" name="email" class="hs-inp form-control" value="{{ agent.user.email }}">
         </div>
         <div class="mb-3">
           <label class="hs-lbl">Phone number</label>
-          <input type="tel" class="hs-inp form-control" value="{{ agent.phone }}" readonly>
+          <input type="tel" name="phone" class="hs-inp form-control" value="{{ agent.phone }}">
         </div>
         <div class="mb-3">
           <label class="hs-lbl">ID Document</label>
@@ -522,8 +508,9 @@
             ✓ Identity document verified by admin
           </div>
         </div>
-      </div>
-
+        <button type="submit" class="hs-save">Save Changes</button>
+      </form>
+    </div>
       <div class="blk">
         <span class="blk-t">Change Password</span>
         <form onsubmit="changePass(event)">

@@ -325,3 +325,46 @@ def toggle_save(request, pk):
         messages.success(request, f'{hostel.hostel_name} saved successfully.')
 
     return redirect('Search')
+
+@login_required(login_url='/login/')
+def update_agent_profile(request):
+    if not hasattr(request.user, 'agent'):
+        return redirect('login')
+
+    if request.method == 'POST':
+        agent = request.user.agent
+        user  = request.user
+
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name  = request.POST.get('last_name', '').strip()
+        user.email      = request.POST.get('email', '').strip()
+        user.save()
+
+        agent.phone         = request.POST.get('phone', '').strip()
+        agent.business_name = request.POST.get('business_name', '').strip()
+        agent.save()
+
+        messages.success(request, 'Profile updated successfully.')
+
+    return redirect('agent_dashboard')
+
+@login_required(login_url='/login/')
+def update_student_profile(request):
+    if not hasattr(request.user, 'student'):
+        return redirect('login')
+
+    if request.method == 'POST':
+        student = request.user.student
+        user    = request.user
+
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name  = request.POST.get('last_name', '').strip()
+        user.email      = request.POST.get('email', '').strip()
+        user.save()
+
+        student.phone = request.POST.get('phone', '').strip()
+        student.save()
+
+        messages.success(request, 'Profile updated successfully.')
+
+    return redirect('student_dashboard')

@@ -18,6 +18,8 @@ urlpatterns = [
     # Dashboards
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('agent/dashboard/',   views.agent_dashboard,   name='agent_dashboard'),
+    path('agent/profile/update/', views.update_agent_profile, name='update_agent_profile'),
+    path('student/profile/update/', views.update_student_profile, name='update_student_profile'),
 
     # Submit listing
     path('submit/', views.submit_listing, name='submit_listing'),

@@ -359,30 +359,34 @@
 
       <div class="blk">
         <span class="blk-t">Personal Information</span>
-        <div class="row g-3 mb-3">
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">First name</label>
-            <input type="text" class="hs-inp form-control" value="{{ student.user.first_name }}" readonly>
+        <form method="POST" action="{% url 'update_student_profile' %}">
+          {% csrf_token %}
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">First name</label>
+              <input type="text" name="first_name" class="hs-inp form-control" value="{{ student.user.first_name }}">
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Last name</label>
+              <input type="text" name="last_name" class="hs-inp form-control" value="{{ student.user.last_name }}">
+            </div>
           </div>
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">Last name</label>
-            <input type="text" class="hs-inp form-control" value="{{ student.user.last_name }}" readonly>
+          <div class="mb-3">
+            <label class="hs-lbl">Email address</label>
+            <input type="email" name="email" class="hs-inp form-control" value="{{ student.user.email }}">
           </div>
-        </div>
-        <div class="mb-3">
-          <label class="hs-lbl">Email address</label>
-          <input type="email" class="hs-inp form-control" value="{{ student.user.email }}" readonly>
-        </div>
-        <div class="row g-3 mb-3">
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">Phone number</label>
-            <input type="tel" class="hs-inp form-control" value="{{ student.phone }}" readonly>
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Phone number</label>
+              <input type="tel" name="phone" class="hs-inp form-control" value="{{ student.phone }}">
+            </div>
+            <div class="col-12 col-sm-6">
+              <label class="hs-lbl">Matric number</label>
+              <input type="text" class="hs-inp form-control" value="{{ student.matric_no }}" readonly>
+            </div>
           </div>
-          <div class="col-12 col-sm-6">
-            <label class="hs-lbl">Matric number</label>
-            <input type="text" class="hs-inp form-control" value="{{ student.matric_no }}" readonly>
-          </div>
-        </div>
+          <button type="submit" class="hs-save">Save Changes</button>
+        </form>
       </div>
 
       <div class="blk">
