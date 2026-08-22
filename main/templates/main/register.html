@@ -151,12 +151,6 @@
         <input type="tel" name="phone" class="inp form-control" placeholder="080 1234 5678" required>
       </div>
 
-      <!-- matric — student only -->
-      <div class="mb-3" id="matric-field">
-        <label class="lbl">Matric number <span class="req">*</span></label>
-        <input type="text" name="matric_no" class="inp form-control" placeholder="e.g. CSC/2021/001">
-        <div class="hint">Your UNIOSUN matriculation number</div>
-      </div>
 
       <!-- id doc — agent only -->
       <!-- Business name — agent only -->
@@ -221,10 +215,9 @@ function selectRole(role) {
   document.getElementById('role-input').value = role;
   document.getElementById('role-student').classList.toggle('selected', role === 'student');
   document.getElementById('role-agent').classList.toggle('selected', role === 'agent');
-  document.getElementById('matric-field').style.display        = role === 'student' ? 'block' : 'none';
-  document.getElementById('business-name-field').style.display = role === 'agent'   ? 'block' : 'none';
-  document.getElementById('passport-field').style.display      = role === 'agent'   ? 'block' : 'none';
-  document.getElementById('id-doc-field').style.display        = role === 'agent'   ? 'block' : 'none';
+  document.getElementById('business-name-field').style.display = role === 'agent' ? 'block' : 'none';
+  document.getElementById('passport-field').style.display      = role === 'agent' ? 'block' : 'none';
+  document.getElementById('id-doc-field').style.display        = role === 'agent' ? 'block' : 'none';
 }
 
 function tp(id, btn) {

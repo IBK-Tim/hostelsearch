@@ -133,7 +133,7 @@
     <div class="sb-user pt-4">
       <div class="sb-av">{{ student.user.first_name|slice:":1" }}</div>
       <div class="sb-name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
-      <div class="sb-role">Student · {{ student.matric_no }}</div>
+      <div class="sb-role">Student</div>
     </div>
     <div class="sb-nav">
       <button class="sb-item on" onclick="switchPane('overview'); closeMob()"><span class="ico">🏠</span>Dashboard</button>
@@ -379,10 +379,6 @@
             <div class="col-12 col-sm-6">
               <label class="hs-lbl">Phone number</label>
               <input type="tel" name="phone" class="hs-inp form-control" value="{{ student.phone }}">
-            </div>
-            <div class="col-12 col-sm-6">
-              <label class="hs-lbl">Matric number</label>
-              <input type="text" class="hs-inp form-control" value="{{ student.matric_no }}" readonly>
             </div>
           </div>
           <button type="submit" class="hs-save">Save Changes</button>

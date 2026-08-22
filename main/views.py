@@ -83,16 +83,7 @@ def register(request):
             return redirect('login')
 
         else:
-            matric = request.POST.get('matric_no', '').strip()
-
-            if not matric:
-                messages.error(request, 'Please enter your matric number.')
-                return render(request, 'main/register.html')
-
-            if Student.objects.filter(matric_no=matric).exists():
-                messages.error(request, 'This matric number is already registered.')
-                return render(request, 'main/register.html')
-
+           
             user = User.objects.create_user(
                 username   = email,
                 email      = email,
@@ -103,7 +94,6 @@ def register(request):
             Student.objects.create(
                 user      = user,
                 phone     = phone,
-                matric_no = matric,
             )
             messages.success(request,
                 'Account created successfully. You can now login.'

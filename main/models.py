@@ -6,7 +6,7 @@ from cloudinary.models import CloudinaryField
 class Student(models.Model):
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     phone      = models.CharField(max_length=20)
-    matric_no  = models.CharField(max_length=50, unique=True)
+    matric_no  = models.CharField(max_length=50, unique=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
