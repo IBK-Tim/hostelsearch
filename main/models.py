@@ -49,6 +49,7 @@ class Hostel(models.Model):
     has_generator   = models.BooleanField(default=False)
     has_bathroom    = models.BooleanField(default=False)
     has_kitchen     = models.BooleanField(default=False)
+    is_available    = models.BooleanField(default=True)
     status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at      = models.DateTimeField(auto_now_add=True)
 

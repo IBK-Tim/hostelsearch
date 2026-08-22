@@ -263,6 +263,11 @@
             {% if hostel.has_electricity %}<span class="tag">24hr Light</span>{% endif %}
             {% if hostel.has_generator %}<span class="tag">Generator</span>{% endif %}
           </div>
+          {% if not hostel.is_available %}
+              <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:600;color:#991b1b;margin-bottom:10px;">
+                🔴 Fully Occupied — No Rooms Available
+              </div>
+          {% endif %}
           <div class="hcard-ft">
             <div class="price">₦{{ hostel.price_session }} <small>/session</small></div>
           </div>

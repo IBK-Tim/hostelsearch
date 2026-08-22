@@ -332,6 +332,22 @@
                 <td>{{ listing.hostel_type }}</td>
                 <td>₦{{ listing.price_session }}</td>
                 <td>
+                  <div class="d-flex gap-1">
+                    {% if listing.status == 'approved' %}
+                      <a href="{% url 'hostel_detail' listing.pk %}" class="ico-btn" title="View live listing">👁</a>
+                    {% else %}
+                      <span class="ico-btn" style="opacity:0.4;cursor:not-allowed;">👁</span>
+                    {% endif %}
+                    <a href="{% url 'toggle_availability' listing.pk %}"
+                      class="ico-btn"
+                      title="{% if listing.is_available %}Mark as Fully Occupied{% else %}Mark as Available{% endif %}"
+                      style="{% if not listing.is_available %}border-color:#fca5a5;background:#fee2e2;{% endif %}">
+                      {% if listing.is_available %}🟢{% else %}🔴{% endif %}
+                    </a>
+                    <button class="ico-btn ico-btn-del" title="Delete listing" onclick="deleteListing(this, {{ listing.pk }})">🗑</button>
+                  </div>
+                </td>
+                <td>
                   {% if listing.status == 'approved' %}
                     <span class="chip chip-approved">✓ Approved</span>
                   {% elif listing.status == 'pending' %}

@@ -207,6 +207,11 @@
   <div class="inner">
     <div>
       <div class="dname">{{ hostel.hostel_name }}</div>
+      {% if not hostel.is_available %}
+          <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:#991b1b;margin-bottom:16px;">
+            🔴 This hostel is currently fully occupied. Check back later.
+          </div>
+      {% endif %}
       <div class="dmeta">
         <span class="chip">✓ Verified Listing</span>
         {% if reviews %}

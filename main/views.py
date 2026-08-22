@@ -157,6 +157,7 @@ def logout_view(request):
 def Search(request):
     hostels = Hostel.objects.filter(status='approved')
 
+    # show unavailable hostels but mark them clearly
     q = request.GET.get('q')
     if q:
         hostels = hostels.filter(
@@ -172,7 +173,6 @@ def Search(request):
     if price_max:
         hostels = hostels.filter(price_session__lte=price_max)
 
-    # get saved hostel IDs for logged in student
     saved_ids = []
     if request.user.is_authenticated and hasattr(request.user, 'student'):
         saved_ids = SavedHostel.objects.filter(
@@ -358,3 +358,19 @@ def update_student_profile(request):
         messages.success(request, 'Profile updated successfully.')
 
     return redirect('student_dashboard')
+
+@login_required(login_url='/login/')
+def toggle_availability(request, pk):
+    if not hasattr(request.user, 'agent'):
+        return redirect('login')
+
+    hostel = get_object_or_404(Hostel, pk=pk, agent=request.user.agent)
+    hostel.is_available = not hostel.is_available
+    hostel.save()
+
+    if hostel.is_available:
+        messages.success(request, f'{hostel.hostel_name} marked as Available.')
+    else:
+        messages.success(request, f'{hostel.hostel_name} marked as Fully Occupied.')
+
+    return redirect('agent_dashboard')
